@@ -1,0 +1,148 @@
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+enum ProductKind {
+  PRODUCT
+  SERVICE
+}
+
+enum OrderStatus {
+  DRAFT
+  QUOTE_REQUESTED
+  CONFIRMED
+  INVOICED
+  PAID
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  VOID
+}
+
+enum PaymentGatewayId {
+  AIRWALLEX
+  NUVEI
+  MOCK
+}
+
+enum PaymentStatus {
+  PENDING
+  REQUIRES_ACTION
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  CANCELED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         UserRole @default(CUSTOMER)
+  companyName  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders Order[]
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  description String
+  sku         String      @unique
+  priceCents  Int
+  currency    String      @default("USD")
+  active      Boolean     @default(true)
+  kind        ProductKind @default(PRODUCT)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  lines OrderLine[]
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    OrderStatus @default(DRAFT)
+  notes     String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  lines    OrderLine[]
+  invoices Invoice[]
+}
+
+model OrderLine {
+  id            String  @id @default(cuid())
+  orderId       String
+  order         Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity      Int
+  unitPriceCents Int
+
+  @@index([orderId])
+}
+
+model Invoice {
+  id           String        @id @default(cuid())
+  orderId      String
+  order        Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  number       String        @unique
+  status       InvoiceStatus @default(DRAFT)
+  amountCents  Int
+  currency     String        @default("USD")
+  dueAt        DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  payments Payment[]
+}
+
+model Payment {
+  id                 String           @id @default(cuid())
+  invoiceId          String
+  invoice            Invoice          @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  gateway            PaymentGatewayId
+  providerPaymentId  String?
+  status             PaymentStatus    @default(PENDING)
+  hostedCheckoutUrl  String?
+  amountCents        Int
+  currency           String           @default("USD")
+  metadata           Json?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([invoiceId])
+  @@index([gateway, providerPaymentId])
+}
+
+model WebhookDelivery {
+  id         String   @id @default(cuid())
+  gateway    PaymentGatewayId
+  eventId    String?
+  payload    Json
+  receivedAt DateTime @default(now())
+  handled    Boolean  @default(false)
+
+  @@index([gateway, receivedAt])
+}
