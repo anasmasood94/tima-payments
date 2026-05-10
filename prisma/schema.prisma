@@ -21,6 +21,7 @@ enum ProductKind {
 
 enum OrderStatus {
   DRAFT
+  PLACED
   QUOTE_REQUESTED
   CONFIRMED
   INVOICED
@@ -36,6 +37,9 @@ enum InvoiceStatus {
 
 enum PaymentGatewayId {
   AIRWALLEX
+  ADYEN
+  WORLDPAY
+  CYBERSOURCE
   NUVEI
   MOCK
 }
@@ -46,6 +50,7 @@ enum PaymentStatus {
   PROCESSING
   SUCCEEDED
   FAILED
+  REFUNDED
   CANCELED
 }
 
@@ -137,12 +142,15 @@ model Payment {
 }
 
 model WebhookDelivery {
-  id         String   @id @default(cuid())
-  gateway    PaymentGatewayId
-  eventId    String?
-  payload    Json
-  receivedAt DateTime @default(now())
-  handled    Boolean  @default(false)
+  id              String           @id @default(cuid())
+  gateway         PaymentGatewayId
+  /// SHA-256 hex of gateway + raw body — dedupes PSP retries of the same payload.
+  idempotencyKey  String           @unique
+  eventId         String?
+  payload         Json
+  receivedAt      DateTime         @default(now())
+  handled         Boolean          @default(false)
+  processingError String?
 
   @@index([gateway, receivedAt])
 }
