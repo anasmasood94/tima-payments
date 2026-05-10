@@ -15,7 +15,15 @@ type Props = {
 
 function pendingHostedPayment(order: {
   status: OrderStatus;
-  invoices: { payments: { status: PaymentStatus; hostedCheckoutUrl: string | null; gateway: PaymentGatewayId; providerPaymentId: string | null }[] }[];
+  invoices: {
+    payments: {
+      status: PaymentStatus;
+      hostedCheckoutUrl: string | null;
+      gateway: PaymentGatewayId;
+      providerPaymentId: string | null;
+      amountCents: number;
+    }[];
+  }[];
 }) {
   return order.invoices
     .flatMap((inv) => inv.payments)
@@ -83,9 +91,9 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
   const pollAirwallex =
     checkoutReturned &&
     order.status === OrderStatus.PLACED &&
-    Boolean(pendingPayment) &&
+    pendingPayment != null &&
     pendingPayment.gateway === PaymentGatewayId.AIRWALLEX &&
-    Boolean(pendingPayment.providerPaymentId) &&
+    pendingPayment.providerPaymentId != null &&
     !pendingPayment.providerPaymentId.startsWith("awx_stub_");
 
   const hasAnyHostedCheckoutUrl = order.invoices
@@ -94,18 +102,18 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
 
   return (
     <div className="space-y-6">
-      <Link href="/portal" className="text-sm text-zinc-600 underline">
-        ← Portal
+      <Link href="/portal" className="text-sm text-body underline">
+        ← My account
       </Link>
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Order</h1>
-        <p className="mt-1 text-sm text-zinc-600">
-          <span className="font-medium text-zinc-900">{orderStatusLabel(order.status)}</span>
-          <span className="text-zinc-400"> · </span>
-          <span className="text-zinc-600">{new Date(order.createdAt).toLocaleString()}</span>
+        <h1 className="text-2xl font-semibold text-ink">Order</h1>
+        <p className="mt-1 text-sm text-body">
+          <span className="font-medium text-ink">{orderStatusLabel(order.status)}</span>
+          <span className="text-muted/70"> · </span>
+          <span className="text-body">{new Date(order.createdAt).toLocaleString()}</span>
         </p>
         {orderStatusDescription(order.status) ? (
-          <p className="mt-2 text-sm text-zinc-600">{orderStatusDescription(order.status)}</p>
+          <p className="mt-2 text-sm text-body">{orderStatusDescription(order.status)}</p>
         ) : null}
       </div>
 
@@ -123,7 +131,7 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
       ) : null}
 
       {sp.checkout === "cancelled" ? (
-        <p className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-sm text-zinc-800">
+        <p className="rounded-lg border border-line bg-panel p-3 text-sm text-ink">
           If you left checkout or the payment did not go through, we will refresh the status from Airwallex here. You
           can use <strong>Continue to checkout</strong> below to try again if the order is still unpaid.
         </p>
@@ -132,16 +140,16 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
       <AirwallexOrderPaymentPoller orderId={order.id} enabled={pollAirwallex} />
 
       {order.status === OrderStatus.PLACED && pendingPayment?.hostedCheckoutUrl ? (
-        <div className="rounded-xl border border-zinc-900 bg-zinc-900 p-5 text-white shadow-sm">
-          <p className="text-sm font-medium uppercase tracking-wide text-zinc-300">Checkout</p>
+        <div className="rounded-xl border border-brick/30 bg-brick p-5 text-white shadow-sm">
+          <p className="text-sm font-medium uppercase tracking-wide text-white/75">Checkout</p>
           <p className="mt-1 text-lg font-semibold">Pay {formatUsd(pendingPayment.amountCents)} to confirm this order</p>
-          <p className="mt-2 text-sm text-zinc-300">
+          <p className="mt-2 text-sm text-white/80">
             You will leave this site for secure hosted payment ({pendingPayment.gateway}). Card details are never
             entered here.
           </p>
           <a
             href={pendingPayment.hostedCheckoutUrl}
-            className="mt-4 inline-flex items-center justify-center rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 hover:bg-zinc-100"
+            className="mt-4 inline-flex items-center justify-center rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-ink hover:bg-panel"
           >
             Continue to checkout
           </a>
@@ -161,14 +169,14 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
         </p>
       ) : null}
       {order.notes ? (
-        <div className="rounded-lg border border-zinc-200 bg-white p-4 text-sm">
-          <p className="text-xs font-medium uppercase text-zinc-500">Notes</p>
-          <p className="mt-1 whitespace-pre-wrap text-zinc-800">{order.notes}</p>
+        <div className="rounded-lg border border-line bg-white p-4 text-sm">
+          <p className="text-xs font-medium uppercase text-muted">Notes</p>
+          <p className="mt-1 whitespace-pre-wrap text-ink">{order.notes}</p>
         </div>
       ) : null}
-      <div className="overflow-hidden rounded-lg border border-zinc-200">
+      <div className="overflow-hidden rounded-lg border border-line">
         <table className="w-full text-left text-sm">
-          <thead className="bg-zinc-100 text-xs uppercase text-zinc-600">
+          <thead className="bg-panel text-xs uppercase text-body">
             <tr>
               <th className="px-4 py-2">Item</th>
               <th className="px-4 py-2">Qty</th>
@@ -176,10 +184,10 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
               <th className="px-4 py-2">Line</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-200 bg-white">
+          <tbody className="divide-y divide-line bg-white">
             {order.lines.map((line) => (
               <tr key={line.id}>
-                <td className="px-4 py-2 text-zinc-900">{line.product.name}</td>
+                <td className="px-4 py-2 text-ink">{line.product.name}</td>
                 <td className="px-4 py-2">{line.quantity}</td>
                 <td className="px-4 py-2">{formatUsd(line.unitPriceCents)}</td>
                 <td className="px-4 py-2">{formatUsd(line.quantity * line.unitPriceCents)}</td>
@@ -188,26 +196,26 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
           </tbody>
         </table>
       </div>
-      <p className="text-sm font-medium text-zinc-900">Subtotal {formatUsd(subtotal)}</p>
+      <p className="text-sm font-medium text-ink">Subtotal {formatUsd(subtotal)}</p>
 
       {order.invoices.length > 0 ? (
         <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-zinc-900">Invoices</h2>
+          <h2 className="text-lg font-semibold text-ink">Invoices</h2>
           <ul className="space-y-2">
             {order.invoices.map((inv) => (
               <li key={inv.id} className="text-sm">
                 {inv.status === InvoiceStatus.DRAFT ? (
-                  <span className="text-zinc-600">
+                  <span className="text-body">
                     {inv.number} — {formatUsd(inv.amountCents)} · <span className="italic">Checkout pending</span>
                   </span>
                 ) : (
                   <>
-                    <Link href={`/portal/invoices/${inv.id}`} className="font-medium text-zinc-900 underline">
+                    <Link href={`/portal/invoices/${inv.id}`} className="font-medium text-ink underline">
                       {inv.number} — {formatUsd(inv.amountCents)}
                     </Link>
-                    <span className="text-zinc-500"> · {inv.status}</span>
+                    <span className="text-muted"> · {inv.status}</span>
                     {inv.status === InvoiceStatus.ISSUED && order.status !== OrderStatus.PAID ? (
-                      <span className="text-zinc-600">
+                      <span className="text-body">
                         {" "}
                         — open the invoice to use <strong>Pay with hosted checkout</strong> for any balance due.
                       </span>
@@ -219,7 +227,7 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
           </ul>
         </section>
       ) : order.status === OrderStatus.INVOICED || order.status === OrderStatus.CONFIRMED ? (
-        <p className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-sm text-zinc-700">
+        <p className="rounded-lg border border-line bg-panel p-3 text-sm text-body">
           When an invoice appears here, you can pay it with hosted checkout from the invoice page.
         </p>
       ) : null}

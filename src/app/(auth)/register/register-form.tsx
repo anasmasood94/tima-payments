@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { registerAction } from "@/actions/auth";
 
 const field =
-  "mt-2 w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100";
+  "mt-2 w-full rounded-ark border border-line bg-white px-4 py-2.5 text-base text-ink shadow-ark outline-none transition placeholder:text-muted focus:border-brick focus:ring-2 focus:ring-brick/15";
 
 export function RegisterForm() {
   const [state, action] = useActionState(registerAction, null as { error?: string } | null);
@@ -12,25 +12,25 @@ export function RegisterForm() {
   return (
     <form action={action} className="space-y-5">
       {state?.error ? (
-        <p className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800">{state.error}</p>
+        <p className="rounded-ark border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800">{state.error}</p>
       ) : null}
 
       <div>
-        <label htmlFor="reg-name" className="block text-sm font-medium text-zinc-700">
+        <label htmlFor="reg-name" className="block text-base font-bold leading-tight text-ink">
           Full name
         </label>
         <input id="reg-name" name="name" required placeholder="Jane Smith" className={field} />
       </div>
 
       <div>
-        <label htmlFor="reg-company" className="block text-sm font-medium text-zinc-700">
-          Company <span className="font-normal text-zinc-400">(optional)</span>
+        <label htmlFor="reg-company" className="block text-base font-bold leading-tight text-ink">
+          Company <span className="font-normal text-muted">(optional)</span>
         </label>
         <input id="reg-company" name="companyName" placeholder="Acme Logistics LLC" className={field} />
       </div>
 
       <div>
-        <label htmlFor="reg-email" className="block text-sm font-medium text-zinc-700">
+        <label htmlFor="reg-email" className="block text-base font-bold leading-tight text-ink">
           Work email
         </label>
         <input
@@ -45,8 +45,8 @@ export function RegisterForm() {
       </div>
 
       <div>
-        <label htmlFor="reg-password" className="block text-sm font-medium text-zinc-700">
-          Password <span className="font-normal text-zinc-400">(min 8 characters)</span>
+        <label htmlFor="reg-password" className="block text-base font-bold leading-tight text-ink">
+          Password <span className="font-normal text-muted">(min 8 characters)</span>
         </label>
         <input
           id="reg-password"
@@ -61,7 +61,7 @@ export function RegisterForm() {
 
       <button
         type="submit"
-        className="w-full rounded-lg bg-zinc-900 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
+        className="w-full rounded-ark bg-brick py-3 text-base font-semibold text-white shadow-ark transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-brick hover:shadow-[0_0.5rem_1.25rem_rgba(192,70,87,0.28)] focus:outline-none focus:ring-2 focus:ring-brick focus:ring-offset-2 active:translate-y-0"
       >
         Create account
       </button>

@@ -17,7 +17,7 @@ export function IssueInvoiceModalTrigger({ orderId, computedSubtotalCents }: Pro
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+        className="rounded-md bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90"
       >
         Issue invoice
       </button>

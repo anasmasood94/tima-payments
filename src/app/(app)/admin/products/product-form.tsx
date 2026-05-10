@@ -14,7 +14,7 @@ export function ProductForm({ submitLabel, initial }: Props) {
   const priceUsd = initial ? initial.priceUsd : "";
 
   const field =
-    "mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm";
+    "mt-1 w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink shadow-sm";
 
   return (
     <form action={action} className="w-full space-y-4">
@@ -23,11 +23,11 @@ export function ProductForm({ submitLabel, initial }: Props) {
         <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{state.error}</p>
       ) : null}
       <label className="block text-sm">
-        <span className="text-zinc-700">Name</span>
+        <span className="text-body">Name</span>
         <input name="name" required defaultValue={initial?.name} className={field} />
       </label>
       <label className="block text-sm">
-        <span className="text-zinc-700">Slug</span>
+        <span className="text-body">Slug</span>
         <input
           name="slug"
           required
@@ -37,15 +37,15 @@ export function ProductForm({ submitLabel, initial }: Props) {
         />
       </label>
       <label className="block text-sm">
-        <span className="text-zinc-700">SKU</span>
+        <span className="text-body">SKU</span>
         <input name="sku" required defaultValue={initial?.sku} className={field} />
       </label>
       <label className="block text-sm">
-        <span className="text-zinc-700">Description</span>
+        <span className="text-body">Description</span>
         <textarea name="description" required rows={4} defaultValue={initial?.description} className={field} />
       </label>
       <label className="block text-sm">
-        <span className="text-zinc-700">Price (USD)</span>
+        <span className="text-body">Price (USD)</span>
         <input
           name="priceUsd"
           type="number"
@@ -57,7 +57,7 @@ export function ProductForm({ submitLabel, initial }: Props) {
         />
       </label>
       <label className="block text-sm">
-        <span className="text-zinc-700">Kind</span>
+        <span className="text-body">Kind</span>
         <select name="kind" defaultValue={(initial?.kind as ProductKind) ?? "PRODUCT"} className={field}>
           <option value="PRODUCT">Product</option>
           <option value="SERVICE">Service</option>
@@ -65,9 +65,9 @@ export function ProductForm({ submitLabel, initial }: Props) {
       </label>
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" name="active" defaultChecked={initial?.active ?? true} />
-        <span className="text-zinc-700">Active (visible in catalog)</span>
+        <span className="text-body">Active (visible in catalog)</span>
       </label>
-      <button type="submit" className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800">
+      <button type="submit" className="rounded-md bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90">
         {submitLabel}
       </button>
     </form>

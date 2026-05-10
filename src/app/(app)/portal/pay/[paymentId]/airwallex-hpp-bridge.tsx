@@ -68,7 +68,7 @@ export function AirwallexHppBridge({ paymentId }: Props) {
   }
 
   return (
-    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-center text-sm text-zinc-600">
+    <div className="rounded-lg border border-line bg-panel p-4 text-center text-sm text-body">
       Redirecting to Airwallex secure checkout…
     </div>
   );

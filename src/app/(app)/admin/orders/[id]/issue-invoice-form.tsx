@@ -16,11 +16,11 @@ export function IssueInvoiceForm({ orderId, computedSubtotalCents }: Props) {
     <form action={action} className="w-full max-w-md space-y-4">
       <input type="hidden" name="orderId" value={orderId} />
       {state?.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
-      <p className="text-sm text-zinc-600">
-        Line-item subtotal: <span className="font-medium text-zinc-900">{formatUsd(computedSubtotalCents)}</span>
+      <p className="text-sm text-body">
+        Line-item subtotal: <span className="font-medium text-ink">{formatUsd(computedSubtotalCents)}</span>
       </p>
       <label className="block text-sm">
-        <span className="text-zinc-700">
+        <span className="text-body">
           Invoice total (USD) — leave blank to use subtotal; override for quoted / adjusted amounts
         </span>
         <input
@@ -29,12 +29,12 @@ export function IssueInvoiceForm({ orderId, computedSubtotalCents }: Props) {
           step="0.01"
           min="0.01"
           placeholder={(computedSubtotalCents / 100).toFixed(2)}
-          className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm"
+          className="mt-1 w-full rounded-md border border-line bg-white px-3 py-2 text-sm"
         />
       </label>
       <button
         type="submit"
-        className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+        className="rounded-md bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90"
       >
         Issue invoice
       </button>

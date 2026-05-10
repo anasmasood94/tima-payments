@@ -45,8 +45,8 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
     <div className="space-y-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-900">Products &amp; services</h1>
-          <p className="mt-1 text-sm text-zinc-600">Slug and SKU must stay unique.</p>
+          <h1 className="text-2xl font-semibold text-ink">Products &amp; services</h1>
+          <p className="mt-1 text-sm text-body">Slug and SKU must stay unique.</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
@@ -55,19 +55,19 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
               setEditId(null);
               setCreateOpen(true);
             }}
-            className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+            className="rounded-md bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90"
           >
             Create product
           </button>
-          <Link href="/admin" className="text-sm text-zinc-600 underline">
+          <Link href="/admin" className="text-sm text-body underline">
             ← Admin
           </Link>
         </div>
       </div>
 
-      <section className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+      <section className="overflow-hidden rounded-xl border border-line bg-white">
         <table className="w-full text-left text-sm">
-          <thead className="bg-zinc-100 text-xs uppercase text-zinc-600">
+          <thead className="bg-panel text-xs uppercase text-body">
             <tr>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">SKU</th>
@@ -76,11 +76,11 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
               <th className="px-4 py-2 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-200">
+          <tbody className="divide-y divide-line">
             {products.map((p) => (
               <tr key={p.id}>
-                <td className="px-4 py-2 font-medium text-zinc-900">{p.name}</td>
-                <td className="px-4 py-2 text-zinc-600">{p.sku}</td>
+                <td className="px-4 py-2 font-medium text-ink">{p.name}</td>
+                <td className="px-4 py-2 text-body">{p.sku}</td>
                 <td className="px-4 py-2">{formatUsd(p.priceCents)}</td>
                 <td className="px-4 py-2">{p.active ? "Yes" : "No"}</td>
                 <td className="px-4 py-2 text-right">
@@ -91,7 +91,7 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
                         setCreateOpen(false);
                         setEditId(p.id);
                       }}
-                      className="font-medium text-zinc-900 underline"
+                      className="font-medium text-ink underline"
                     >
                       Edit
                     </button>
@@ -143,7 +143,7 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
 
 export function ProductsAdminPanel({ products }: { products: ProductRow[] }) {
   return (
-    <Suspense fallback={<p className="text-sm text-zinc-600">Loading products…</p>}>
+    <Suspense fallback={<p className="text-sm text-body">Loading products…</p>}>
       <ProductsAdminPanelInner products={products} />
     </Suspense>
   );

@@ -39,7 +39,7 @@ export default async function AdminOrderDetailPage({ params, searchParams }: Pro
 
   return (
     <div className="space-y-8">
-      <Link href="/admin/orders" className="text-sm text-zinc-600 underline">
+      <Link href="/admin/orders" className="text-sm text-body underline">
         ← Orders
       </Link>
       {sp.issued ? (
@@ -48,15 +48,15 @@ export default async function AdminOrderDetailPage({ params, searchParams }: Pro
         </p>
       ) : null}
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Order detail</h1>
-        <p className="mt-1 text-sm text-zinc-600">
+        <h1 className="text-2xl font-semibold text-ink">Order detail</h1>
+        <p className="mt-1 text-sm text-body">
           {order.user.name} · {order.user.email} · {orderStatusLabel(order.status)}
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-zinc-200">
+      <div className="overflow-hidden rounded-lg border border-line">
         <table className="w-full text-left text-sm">
-          <thead className="bg-zinc-100 text-xs uppercase text-zinc-600">
+          <thead className="bg-panel text-xs uppercase text-body">
             <tr>
               <th className="px-4 py-2">Item</th>
               <th className="px-4 py-2">Qty</th>
@@ -64,7 +64,7 @@ export default async function AdminOrderDetailPage({ params, searchParams }: Pro
               <th className="px-4 py-2">Line</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-200 bg-white">
+          <tbody className="divide-y divide-line bg-white">
             {order.lines.map((line) => (
               <tr key={line.id}>
                 <td className="px-4 py-2">{line.product.name}</td>
@@ -79,19 +79,19 @@ export default async function AdminOrderDetailPage({ params, searchParams }: Pro
       <p className="text-sm font-medium">Subtotal {formatUsd(subtotal)}</p>
 
       {order.notes ? (
-        <div className="rounded-lg border border-zinc-200 bg-white p-4 text-sm">
-          <p className="text-xs font-medium uppercase text-zinc-500">Customer notes</p>
+        <div className="rounded-lg border border-line bg-white p-4 text-sm">
+          <p className="text-xs font-medium uppercase text-muted">Customer notes</p>
           <p className="mt-1 whitespace-pre-wrap">{order.notes}</p>
         </div>
       ) : null}
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-zinc-900">Invoices</h2>
+          <h2 className="text-lg font-semibold text-ink">Invoices</h2>
           {canIssue ? <IssueInvoiceModalTrigger orderId={order.id} computedSubtotalCents={subtotal} /> : null}
         </div>
         {order.invoices.length === 0 ? (
-          <p className="text-sm text-zinc-600">No invoices yet.</p>
+          <p className="text-sm text-body">No invoices yet.</p>
         ) : (
           <ul className="space-y-1 text-sm">
             {order.invoices.map((inv) => (

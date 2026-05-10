@@ -12,11 +12,11 @@ export function InvoicePayForm({ invoiceId }: { invoiceId: string }) {
       {state?.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
       <button
         type="submit"
-        className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+        className="rounded-md bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90"
       >
         Pay with hosted checkout
       </button>
-      <p className="text-xs text-zinc-500">
+      <p className="text-xs text-muted">
         You will leave this site to complete payment with your provider. Card entry, 3-D Secure / SCA, and other
         authentication steps happen on hosted pages from your payment provider; we never store card numbers or CVV
         here.

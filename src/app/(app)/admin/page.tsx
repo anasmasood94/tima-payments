@@ -26,8 +26,8 @@ export default async function AdminHomePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Admin dashboard</h1>
-        <p className="mt-2 text-sm text-zinc-600">
+        <h1 className="text-2xl font-semibold text-ink">Admin dashboard</h1>
+        <p className="mt-2 text-sm text-body">
           Manage catalog, customers, orders, invoices, and payments.
         </p>
       </div>
@@ -46,10 +46,10 @@ function StatCard({ href, label, value }: { href: string; label: string; value: 
   return (
     <Link
       href={href}
-      className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300"
+      className="rounded-xl border border-line bg-white p-5 shadow-sm transition hover:border-line"
     >
-      <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">{label}</p>
-      <p className="mt-2 text-3xl font-semibold text-zinc-900">{value}</p>
+      <p className="text-xs font-medium uppercase tracking-wide text-muted">{label}</p>
+      <p className="mt-2 text-3xl font-semibold text-ink">{value}</p>
     </Link>
   );
 }

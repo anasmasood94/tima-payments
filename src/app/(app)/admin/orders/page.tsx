@@ -24,14 +24,14 @@ export default async function AdminOrdersPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-zinc-900">Orders</h1>
-        <Link href="/admin" className="text-sm text-zinc-600 underline">
+        <h1 className="text-2xl font-semibold text-ink">Orders</h1>
+        <Link href="/admin" className="text-sm text-body underline">
           ← Admin
         </Link>
       </div>
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-line bg-white">
         <table className="w-full text-left text-sm">
-          <thead className="bg-zinc-100 text-xs uppercase text-zinc-600">
+          <thead className="bg-panel text-xs uppercase text-body">
             <tr>
               <th className="px-4 py-2">When</th>
               <th className="px-4 py-2">Customer</th>
@@ -40,18 +40,18 @@ export default async function AdminOrdersPage() {
               <th className="px-4 py-2" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-200">
+          <tbody className="divide-y divide-line">
             {orders.map((o) => (
               <tr key={o.id}>
-                <td className="px-4 py-2 text-zinc-600">{o.createdAt.toLocaleString()}</td>
+                <td className="px-4 py-2 text-body">{o.createdAt.toLocaleString()}</td>
                 <td className="px-4 py-2">
-                  <p className="font-medium text-zinc-900">{o.user.name}</p>
-                  <p className="text-xs text-zinc-500">{o.user.email}</p>
+                  <p className="font-medium text-ink">{o.user.name}</p>
+                  <p className="text-xs text-muted">{o.user.email}</p>
                 </td>
                 <td className="px-4 py-2">{orderStatusLabel(o.status)}</td>
                 <td className="px-4 py-2">{o.lines.length}</td>
                 <td className="px-4 py-2 text-right">
-                  <Link href={`/admin/orders/${o.id}`} className="font-medium text-zinc-900 underline">
+                  <Link href={`/admin/orders/${o.id}`} className="font-medium text-ink underline">
                     Open
                   </Link>
                 </td>

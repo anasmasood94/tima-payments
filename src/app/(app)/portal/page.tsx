@@ -6,7 +6,7 @@ import { getSession } from "@/lib/auth/session";
 import { formatUsd } from "@/lib/format";
 import { orderStatusLabel } from "@/lib/order-status";
 
-export const metadata = { title: "Customer portal" };
+export const metadata = { title: "My account" };
 
 export default async function PortalHomePage({
   searchParams,
@@ -40,7 +40,7 @@ export default async function PortalHomePage({
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Customer portal</h1>
+        <h1 className="text-2xl font-semibold text-ink">My account</h1>
         {sp.created ? (
           <div className="mt-2 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950">
             <p className="font-medium text-emerald-900">Your request was submitted.</p>
@@ -55,20 +55,20 @@ export default async function PortalHomePage({
       </div>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-zinc-900">Recent orders</h2>
+        <h2 className="text-lg font-semibold text-ink">Recent orders</h2>
         {orders.length === 0 ? (
-          <p className="text-sm text-zinc-600">No orders yet. Start from the catalog.</p>
+          <p className="text-sm text-body">No orders yet. Start from the catalog.</p>
         ) : (
-          <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white">
+          <ul className="divide-y divide-line rounded-lg border border-line bg-white">
             {orders.map((o) => (
               <li key={o.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
                 <div>
-                  <p className="font-medium text-zinc-900">{orderStatusLabel(o.status)}</p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="font-medium text-ink">{orderStatusLabel(o.status)}</p>
+                  <p className="text-xs text-muted">
                     {o.lines.length} line(s) · {new Date(o.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-                <Link href={`/portal/orders/${o.id}`} className="text-sm font-medium text-zinc-900 underline">
+                <Link href={`/portal/orders/${o.id}`} className="text-sm font-medium text-ink underline">
                   View
                 </Link>
               </li>
@@ -78,20 +78,20 @@ export default async function PortalHomePage({
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-zinc-900">Invoices</h2>
+        <h2 className="text-lg font-semibold text-ink">Invoices</h2>
         {invoices.length === 0 ? (
-          <p className="text-sm text-zinc-600">No invoices yet.</p>
+          <p className="text-sm text-body">No invoices yet.</p>
         ) : (
-          <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white">
+          <ul className="divide-y divide-line rounded-lg border border-line bg-white">
             {invoices.map((inv) => (
               <li key={inv.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
                 <div>
-                  <p className="font-medium text-zinc-900">{inv.number}</p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="font-medium text-ink">{inv.number}</p>
+                  <p className="text-xs text-muted">
                     {formatUsd(inv.amountCents)} · {inv.status}
                   </p>
                 </div>
-                <Link href={`/portal/invoices/${inv.id}`} className="text-sm font-medium text-zinc-900 underline">
+                <Link href={`/portal/invoices/${inv.id}`} className="text-sm font-medium text-ink underline">
                   Open
                 </Link>
               </li>

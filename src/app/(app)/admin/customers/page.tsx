@@ -25,17 +25,17 @@ export default async function AdminCustomersPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-900">Customer accounts</h1>
-          <p className="mt-1 text-sm text-zinc-600">Read-only directory of registered customers.</p>
+          <h1 className="text-2xl font-semibold text-ink">Customer accounts</h1>
+          <p className="mt-1 text-sm text-body">Read-only directory of registered customers.</p>
         </div>
-        <Link href="/admin" className="text-sm text-zinc-600 underline">
+        <Link href="/admin" className="text-sm text-body underline">
           ← Admin
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-line bg-white">
         <table className="w-full text-left text-sm">
-          <thead className="bg-zinc-100 text-xs uppercase text-zinc-600">
+          <thead className="bg-panel text-xs uppercase text-body">
             <tr>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Email</th>
@@ -43,13 +43,13 @@ export default async function AdminCustomersPage() {
               <th className="px-4 py-2">Registered</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-200">
+          <tbody className="divide-y divide-line">
             {customers.map((c) => (
               <tr key={c.id}>
-                <td className="px-4 py-2 font-medium text-zinc-900">{c.name}</td>
-                <td className="px-4 py-2 text-zinc-700">{c.email}</td>
-                <td className="px-4 py-2 text-zinc-600">{c.companyName ?? "—"}</td>
-                <td className="px-4 py-2 text-zinc-600">{c.createdAt.toLocaleDateString()}</td>
+                <td className="px-4 py-2 font-medium text-ink">{c.name}</td>
+                <td className="px-4 py-2 text-body">{c.email}</td>
+                <td className="px-4 py-2 text-body">{c.companyName ?? "—"}</td>
+                <td className="px-4 py-2 text-body">{c.createdAt.toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>

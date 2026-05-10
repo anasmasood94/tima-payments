@@ -30,7 +30,7 @@ export function AdminModal({ open, title, onClose, children }: AdminModalProps) 
   return (
     <dialog
       ref={ref}
-      className="m-0 max-h-none max-w-none border-0 bg-transparent p-0 shadow-none outline-none [&::backdrop]:bg-zinc-900/40"
+      className="m-0 max-h-none max-w-none border-0 bg-transparent p-0 shadow-none outline-none [&::backdrop]:bg-brick/40"
       onClose={onClose}
     >
       <div
@@ -40,14 +40,14 @@ export function AdminModal({ open, title, onClose, children }: AdminModalProps) 
         }}
       >
         <div
-          className="z-10 flex max-h-[min(90vh,calc(100%-2rem))] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xl"
+          className="z-10 flex max-h-[min(90vh,calc(100%-2rem))] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-line bg-white shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 px-4 py-3">
-            <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
+          <div className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
+            <h2 className="text-base font-semibold text-ink">{title}</h2>
             <button
               type="button"
-              className="rounded-md p-1 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
+              className="rounded-md p-1 text-muted hover:bg-panel hover:text-ink"
               aria-label="Close"
               onClick={onClose}
             >

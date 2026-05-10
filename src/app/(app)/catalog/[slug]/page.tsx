@@ -20,22 +20,22 @@ export default async function ProductDetailPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <Link href="/catalog" className="text-sm text-zinc-600 underline">
+      <Link href="/catalog" className="text-sm text-body underline">
         ← Back to catalog
       </Link>
-      <p className="text-xs font-medium uppercase text-zinc-500">{product.kind}</p>
-      <h1 className="text-3xl font-semibold text-zinc-900">{product.name}</h1>
-      <p className="text-sm text-zinc-600">SKU {product.sku}</p>
-      <p className="text-lg font-medium text-zinc-900">{formatUsd(product.priceCents)}</p>
-      <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-700">{product.description}</p>
-      <p className="text-sm text-zinc-600">
+      <p className="text-xs font-medium uppercase text-muted">{product.kind}</p>
+      <h1 className="text-3xl font-semibold text-ink">{product.name}</h1>
+      <p className="text-sm text-body">SKU {product.sku}</p>
+      <p className="text-lg font-medium text-ink">{formatUsd(product.priceCents)}</p>
+      <p className="whitespace-pre-wrap text-sm leading-relaxed text-body">{product.description}</p>
+      <p className="text-sm text-body">
         To purchase, set quantities on the{" "}
         <Link href="/catalog#shop" className="font-medium underline">
           catalog
         </Link>{" "}
         page and submit an order or quote. After we issue an invoice, pay from{" "}
         <Link href="/portal" className="font-medium underline">
-          your portal
+          your account
         </Link>{" "}
         using hosted checkout.
       </p>
