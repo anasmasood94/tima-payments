@@ -157,6 +157,11 @@ model Payment {
   @@index([gateway, providerPaymentId])
 }
 
+model SiteSetting {
+  key   String @id
+  value String
+}
+
 model WebhookDelivery {
   id              String           @id @default(cuid())
   gateway         PaymentGatewayId

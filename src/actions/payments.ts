@@ -111,7 +111,7 @@ export async function startHostedCheckoutFormAction(_prev: unknown, formData: Fo
     return { error: "Nothing to pay on this invoice." };
   }
 
-  const adapter = getPaymentGatewayAdapter();
+  const adapter = await getPaymentGatewayAdapter();
   const user = await prisma.user.findUniqueOrThrow({ where: { id: session.sub } });
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";

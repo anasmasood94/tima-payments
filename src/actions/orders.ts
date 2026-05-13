@@ -80,8 +80,8 @@ export async function createOrderFromCatalogForm(_prev: unknown, formData: FormD
     redirect("/portal?created=1");
   }
 
-  /** Order path: placed → checkout (Airwallex or ORDER_CHECKOUT_GATEWAY) → paid via webhook / simulator. */
-  const adapter = getOrderCheckoutAdapter();
+  /** Order path: placed → checkout → paid via webhook / simulator. */
+  const adapter = await getOrderCheckoutAdapter();
   const user = await prisma.user.findUniqueOrThrow({ where: { id: session.sub } });
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 

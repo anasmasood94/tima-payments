@@ -6,11 +6,10 @@ import { mockGateway } from "./mock-gateway";
 import { nuveiGateway } from "./nuvei-gateway";
 import { worldpayGateway } from "./worldpay-gateway";
 import type { PaymentGatewayAdapter } from "./types";
+import { getActiveGatewayId } from "@/actions/settings";
 
 /**
- * Active PSP for **invoice** pay and **catalog** checkout.
- * Set `ORDER_CHECKOUT_GATEWAY` to `AIRWALLEX`, `ADYEN`, `WORLDPAY`, `CYBERSOURCE`, or `NUVEI` (defaults to Airwallex).
- * `MOCK` is not used for new payments.
+ * Env-based fallback (kept for backward compat; DB setting takes priority).
  */
 export function resolvePaymentGatewayIdFromEnv(): PaymentGatewayId {
   let raw = (process.env.ORDER_CHECKOUT_GATEWAY ?? "AIRWALLEX").toUpperCase().trim();
@@ -21,9 +20,15 @@ export function resolvePaymentGatewayIdFromEnv(): PaymentGatewayId {
   return allowed.has(raw) ? (raw as PaymentGatewayId) : PaymentGatewayId.AIRWALLEX;
 }
 
-/** Invoice “Pay with hosted checkout” (same PSP selection as catalog orders). */
-export function getPaymentGatewayAdapter(): PaymentGatewayAdapter {
-  return getAdapterByGatewayId(resolvePaymentGatewayIdFromEnv());
+/** Resolve the admin-chosen gateway from the DB. */
+export async function resolveActiveGatewayId(): Promise<PaymentGatewayId> {
+  return getActiveGatewayId();
+}
+
+/** Invoice "Pay with hosted checkout" — reads admin-chosen gateway from DB. */
+export async function getPaymentGatewayAdapter(): Promise<PaymentGatewayAdapter> {
+  const id = await resolveActiveGatewayId();
+  return getAdapterByGatewayId(id);
 }
 
 export function getAdapterByGatewayId(id: PaymentGatewayId): PaymentGatewayAdapter {

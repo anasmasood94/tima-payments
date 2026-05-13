@@ -1,10 +1,10 @@
-import { getAdapterByGatewayId, resolvePaymentGatewayIdFromEnv } from "./registry";
+import { getPaymentGatewayAdapter } from "./registry";
 import type { PaymentGatewayAdapter } from "./types";
 
 /**
- * Gateway used when the customer pays right after placing a catalog order (before fulfillment).
- * Same env as invoice checkout: `ORDER_CHECKOUT_GATEWAY` (see `resolvePaymentGatewayIdFromEnv`).
+ * Gateway used when the customer pays right after placing a catalog order.
+ * Reads the admin-chosen gateway from the database.
  */
-export function getOrderCheckoutAdapter(): PaymentGatewayAdapter {
-  return getAdapterByGatewayId(resolvePaymentGatewayIdFromEnv());
+export async function getOrderCheckoutAdapter(): Promise<PaymentGatewayAdapter> {
+  return getPaymentGatewayAdapter();
 }
