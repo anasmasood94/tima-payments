@@ -28,7 +28,7 @@ export function LoginForm({ next }: { next?: string }) {
           type="email"
           required
           autoComplete="email"
-          placeholder="you@company.com"
+          placeholder={t.auth.emailPlaceholder}
           className={field}
         />
       </div>
@@ -43,7 +43,7 @@ export function LoginForm({ next }: { next?: string }) {
           type="password"
           required
           autoComplete="current-password"
-          placeholder="Enter your password"
+          placeholder={t.auth.passwordPlaceholder}
           className={field}
         />
       </div>

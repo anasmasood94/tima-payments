@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { useTranslation } from "@/lib/i18n/language-context";
 import { useSearchPagination, SearchBar, Pagination } from "@/components/admin-list-controls";
+import { orderStatusLabel } from "@/lib/order-status";
+import type { OrderStatus } from "@prisma/client";
 
 export type PortalOrderRow = {
   id: string;
-  status: string;
+  status: OrderStatus;
   lineCount: number;
   createdAt: string;
 };
@@ -24,9 +26,9 @@ export function PortalOrdersList({ orders }: { orders: PortalOrderRow[] }) {
 
   const searchFn = useCallback(
     (o: PortalOrderRow, q: string) =>
-      o.status.toLowerCase().includes(q) ||
+      orderStatusLabel(o.status, t.orderStatus).toLowerCase().includes(q) ||
       o.createdAt.toLowerCase().includes(q),
-    [],
+    [t.orderStatus],
   );
 
   const { query, setQuery, page, setPage, totalPages, paginated, showPagination } =
@@ -40,15 +42,15 @@ export function PortalOrdersList({ orders }: { orders: PortalOrderRow[] }) {
       ) : (
         <>
           <div className="max-w-sm">
-            <SearchBar value={query} onChange={setQuery} placeholder="Search orders…" />
+            <SearchBar value={query} onChange={setQuery} placeholder={t.portal.searchOrders} />
           </div>
           <ul className="divide-y divide-line rounded-lg border border-line bg-white">
             {paginated.map((o) => (
               <li key={o.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
                 <div>
-                  <p className="font-medium text-ink">{o.status}</p>
+                  <p className="font-medium text-ink">{orderStatusLabel(o.status, t.orderStatus)}</p>
                   <p className="text-xs text-muted">
-                    {o.lineCount} line(s) · {o.createdAt}
+                    {o.lineCount} {t.portal.lines} · {o.createdAt}
                   </p>
                 </div>
                 <Link href={`/portal/orders/${o.id}`} className="text-sm font-medium text-ink underline">
@@ -57,7 +59,7 @@ export function PortalOrdersList({ orders }: { orders: PortalOrderRow[] }) {
               </li>
             ))}
             {paginated.length === 0 && (
-              <li className="px-4 py-6 text-center text-sm text-muted">No orders found.</li>
+              <li className="px-4 py-6 text-center text-sm text-muted">{t.portal.noOrdersFound}</li>
             )}
           </ul>
           {showPagination && (
@@ -91,7 +93,7 @@ export function PortalInvoicesList({ invoices }: { invoices: PortalInvoiceRow[] 
       ) : (
         <>
           <div className="max-w-sm">
-            <SearchBar value={query} onChange={setQuery} placeholder="Search invoices…" />
+            <SearchBar value={query} onChange={setQuery} placeholder={t.portal.searchInvoices} />
           </div>
           <ul className="divide-y divide-line rounded-lg border border-line bg-white">
             {paginated.map((inv) => (
@@ -108,7 +110,7 @@ export function PortalInvoicesList({ invoices }: { invoices: PortalInvoiceRow[] 
               </li>
             ))}
             {paginated.length === 0 && (
-              <li className="px-4 py-6 text-center text-sm text-muted">No invoices found.</li>
+              <li className="px-4 py-6 text-center text-sm text-muted">{t.portal.noInvoicesFound}</li>
             )}
           </ul>
           {showPagination && (

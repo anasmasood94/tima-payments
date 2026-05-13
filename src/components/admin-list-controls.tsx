@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const PAGE_SIZE = 10;
 
@@ -83,6 +84,8 @@ export function Pagination({
   totalPages: number;
   onPageChange: (p: number) => void;
 }) {
+  const { t } = useTranslation();
+
   const pages = useMemo(() => {
     const result: (number | "…")[] = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -103,7 +106,7 @@ export function Pagination({
         onClick={() => onPageChange(page - 1)}
         className="rounded-md px-2.5 py-1.5 text-sm text-body transition-colors hover:bg-panel disabled:opacity-40"
       >
-        ‹ Prev
+        ‹ {t.pagination.prev}
       </button>
       {pages.map((p, i) =>
         p === "…" ? (
@@ -131,7 +134,7 @@ export function Pagination({
         onClick={() => onPageChange(page + 1)}
         className="rounded-md px-2.5 py-1.5 text-sm text-body transition-colors hover:bg-panel disabled:opacity-40"
       >
-        Next ›
+        {t.pagination.next} ›
       </button>
     </div>
   );

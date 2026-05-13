@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { useTranslation } from "@/lib/i18n/language-context";
 import { useSearchPagination, SearchBar, Pagination } from "@/components/admin-list-controls";
 
 export type PaymentRow = {
@@ -15,6 +16,8 @@ export type PaymentRow = {
 };
 
 export function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
+  const { t } = useTranslation();
+
   const searchFn = useCallback(
     (p: PaymentRow, q: string) =>
       p.customerName.toLowerCase().includes(q) ||
@@ -29,21 +32,28 @@ export function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
     useSearchPagination(payments, searchFn);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-ink">{t.admin.paymentsTitle}</h1>
+          <p className="mt-1 text-sm text-body">{t.admin.paymentsDesc}</p>
+        </div>
+      </div>
+
       <div className="max-w-sm">
-        <SearchBar value={query} onChange={setQuery} placeholder="Search by customer, gateway, or status…" />
+        <SearchBar value={query} onChange={setQuery} placeholder={t.admin.searchPayments} />
       </div>
 
       <div className="overflow-x-auto overflow-hidden rounded-xl border border-line bg-white">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="bg-panel text-xs uppercase text-body">
             <tr>
-              <th className="px-4 py-2">When</th>
-              <th className="px-4 py-2">Customer</th>
-              <th className="px-4 py-2">Gateway</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Amount</th>
-              <th className="px-4 py-2">Provider ref</th>
+              <th className="px-4 py-2">{t.admin.when}</th>
+              <th className="px-4 py-2">{t.admin.customer}</th>
+              <th className="px-4 py-2">{t.admin.gateway}</th>
+              <th className="px-4 py-2">{t.admin.status}</th>
+              <th className="px-4 py-2">{t.admin.amount}</th>
+              <th className="px-4 py-2">{t.admin.providerRef}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -63,7 +73,7 @@ export function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
             {paginated.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-6 text-center text-sm text-muted">
-                  No payments found.
+                  {t.admin.noPaymentsFound}
                 </td>
               </tr>
             )}

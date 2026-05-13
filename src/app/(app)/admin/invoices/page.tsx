@@ -30,12 +30,5 @@ export default async function AdminInvoicesPage() {
     createdAt: inv.createdAt.toLocaleString(),
   }));
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-ink">Invoices</h1>
-      </div>
-      <InvoicesTable invoices={invoices} />
-    </div>
-  );
+  return <InvoicesTable invoices={invoices} />;
 }

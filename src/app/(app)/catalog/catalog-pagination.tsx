@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { CATALOG_PAGE_SIZE } from "./catalog-constants";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 type Props = {
   page: number;
@@ -8,10 +11,12 @@ type Props = {
 };
 
 export function CatalogPagination({ page, totalPages, totalItems }: Props) {
+  const { t } = useTranslation();
+
   if (totalPages <= 1) {
     return (
       <p className="text-center text-sm text-muted">
-        Showing all {totalItems} {totalItems === 1 ? "item" : "items"}
+        {t.catalog.showingAll} {totalItems} {totalItems === 1 ? t.catalog.item : t.catalog.items}
       </p>
     );
   }
@@ -25,8 +30,8 @@ export function CatalogPagination({ page, totalPages, totalItems }: Props) {
       aria-label="Catalog pagination"
     >
       <p className="text-sm text-muted">
-        Showing <span className="font-medium text-ink">{itemStart}</span>–
-        <span className="font-medium text-ink">{itemEnd}</span> of{" "}
+        {t.catalog.showing} <span className="font-medium text-ink">{itemStart}</span>–
+        <span className="font-medium text-ink">{itemEnd}</span> {t.catalog.of}{" "}
         <span className="font-medium text-ink">{totalItems}</span>
       </p>
       <div className="flex flex-wrap items-center justify-center gap-2">
@@ -35,26 +40,26 @@ export function CatalogPagination({ page, totalPages, totalItems }: Props) {
             href={`/catalog?page=${page - 1}#shop`}
             className="rounded-md border border-line bg-white px-3 py-1.5 text-sm font-medium text-body shadow-sm hover:bg-panel"
           >
-            Previous
+            {t.catalog.previous}
           </Link>
         ) : (
           <span className="rounded-md border border-transparent px-3 py-1.5 text-sm font-medium text-muted/50">
-            Previous
+            {t.catalog.previous}
           </span>
         )}
         <span className="px-2 text-sm tabular-nums text-body">
-          Page {page} of {totalPages}
+          {t.catalog.pageOf.replace("{page}", String(page)).replace("{total}", String(totalPages))}
         </span>
         {page < totalPages ? (
           <Link
             href={`/catalog?page=${page + 1}#shop`}
             className="rounded-md border border-line bg-white px-3 py-1.5 text-sm font-medium text-body shadow-sm hover:bg-panel"
           >
-            Next
+            {t.catalog.next}
           </Link>
         ) : (
           <span className="rounded-md border border-transparent px-3 py-1.5 text-sm font-medium text-muted/50">
-            Next
+            {t.catalog.next}
           </span>
         )}
       </div>

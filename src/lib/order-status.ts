@@ -1,35 +1,47 @@
 import { OrderStatus } from "@prisma/client";
 
-/** Customer- and admin-facing labels for lifecycle states. */
-export function orderStatusLabel(status: OrderStatus): string {
+type OrderStatusDict = {
+  draft: string;
+  placed: string;
+  quoteRequested: string;
+  confirmed: string;
+  invoiced: string;
+  paid: string;
+  cancelled: string;
+  placedDesc: string;
+  paidDesc: string;
+  quoteRequestedDesc: string;
+};
+
+export function orderStatusLabel(status: OrderStatus, dict: OrderStatusDict): string {
   switch (status) {
     case OrderStatus.DRAFT:
-      return "Draft";
+      return dict.draft;
     case OrderStatus.PLACED:
-      return "Placed — pay now";
+      return dict.placed;
     case OrderStatus.QUOTE_REQUESTED:
-      return "Quote requested";
+      return dict.quoteRequested;
     case OrderStatus.CONFIRMED:
-      return "Confirmed";
+      return dict.confirmed;
     case OrderStatus.INVOICED:
-      return "Invoiced";
+      return dict.invoiced;
     case OrderStatus.PAID:
-      return "Paid";
+      return dict.paid;
     case OrderStatus.CANCELLED:
-      return "Cancelled";
+      return dict.cancelled;
     default:
       return status;
   }
 }
 
-export function orderStatusDescription(status: OrderStatus): string | null {
+export function orderStatusDescription(status: OrderStatus, dict: OrderStatusDict): string | null {
   switch (status) {
     case OrderStatus.PLACED:
-      return "Complete checkout to confirm your order. Card entry happens on your payment provider.";
+      return dict.placedDesc;
     case OrderStatus.PAID:
-      return "Payment received — order confirmed.";
+      return dict.paidDesc;
     case OrderStatus.QUOTE_REQUESTED:
-      return "We will review and send an invoice when ready.";
+      return dict.quoteRequestedDesc;
     default:
       return null;
   }

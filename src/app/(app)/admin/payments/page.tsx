@@ -31,17 +31,5 @@ export default async function AdminPaymentsPage() {
     providerRef: p.providerPaymentId ?? "—",
   }));
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-ink">Payment activity</h1>
-          <p className="mt-1 text-sm text-body">
-            Pending, paid, failed, and refunded attempts (provider-hosted checkout; no card data stored).
-          </p>
-        </div>
-      </div>
-      <PaymentsTable payments={payments} />
-    </div>
-  );
+  return <PaymentsTable payments={payments} />;
 }

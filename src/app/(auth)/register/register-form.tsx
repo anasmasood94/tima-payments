@@ -21,14 +21,14 @@ export function RegisterForm() {
         <label htmlFor="reg-name" className="block text-base font-bold leading-tight text-ink">
           {t.auth.fullName}
         </label>
-        <input id="reg-name" name="name" required placeholder="Jane Smith" className={field} />
+        <input id="reg-name" name="name" required placeholder={t.auth.namePlaceholder} className={field} />
       </div>
 
       <div>
         <label htmlFor="reg-company" className="block text-base font-bold leading-tight text-ink">
           {t.auth.company} <span className="font-normal text-muted">{t.auth.optional}</span>
         </label>
-        <input id="reg-company" name="companyName" placeholder="Acme Logistics LLC" className={field} />
+        <input id="reg-company" name="companyName" placeholder={t.auth.companyPlaceholder} className={field} />
       </div>
 
       <div>
@@ -41,7 +41,7 @@ export function RegisterForm() {
           type="email"
           required
           autoComplete="email"
-          placeholder="you@company.com"
+          placeholder={t.auth.emailPlaceholder}
           className={field}
         />
       </div>

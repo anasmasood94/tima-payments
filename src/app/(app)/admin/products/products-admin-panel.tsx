@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import type { ProductKind } from "@prisma/client";
 import { AdminModal } from "@/components/admin-modal";
 import { formatUsd } from "@/lib/format";
+import { useTranslation } from "@/lib/i18n/language-context";
 import { deactivateProductFormAction } from "@/actions/admin-products";
 import { useSearchPagination, SearchBar, Pagination } from "@/components/admin-list-controls";
 import { ProductForm } from "./product-form";
@@ -41,6 +42,7 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
   }, [searchParams, router, products]);
 
   const editing = useMemo(() => products.find((p) => p.id === editId) ?? null, [products, editId]);
+  const { t } = useTranslation();
 
   const searchFn = useCallback(
     (p: ProductRow, q: string) =>
@@ -56,8 +58,8 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
     <div className="space-y-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-ink">Products &amp; services</h1>
-          <p className="mt-1 text-sm text-body">Slug and SKU must stay unique.</p>
+          <h1 className="text-2xl font-semibold text-ink">{t.admin.productsTitle}</h1>
+          <p className="mt-1 text-sm text-body">{t.admin.productsDesc}</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
@@ -68,24 +70,24 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
             }}
             className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark"
           >
-            Create product
+            {t.admin.createProduct}
           </button>
         </div>
       </div>
 
       <div className="max-w-sm">
-        <SearchBar value={query} onChange={setQuery} placeholder="Search by name or SKU…" />
+        <SearchBar value={query} onChange={setQuery} placeholder={t.admin.searchProducts} />
       </div>
 
       <section className="overflow-hidden rounded-xl border border-line bg-white">
         <table className="w-full text-left text-sm">
           <thead className="bg-panel text-xs uppercase text-body">
             <tr>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">SKU</th>
-              <th className="px-4 py-2">Price</th>
-              <th className="px-4 py-2">Active</th>
-              <th className="px-4 py-2 text-right">Actions</th>
+              <th className="px-4 py-2">{t.admin.name}</th>
+              <th className="px-4 py-2">{t.admin.sku}</th>
+              <th className="px-4 py-2">{t.admin.price}</th>
+              <th className="px-4 py-2">{t.admin.active}</th>
+              <th className="px-4 py-2 text-right">{t.admin.actions}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -94,7 +96,7 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
                 <td className="px-4 py-2 font-medium text-ink">{p.name}</td>
                 <td className="px-4 py-2 text-body">{p.sku}</td>
                 <td className="px-4 py-2">{formatUsd(p.priceCents)}</td>
-                <td className="px-4 py-2">{p.active ? "Yes" : "No"}</td>
+                <td className="px-4 py-2">{p.active ? t.admin.yes : t.admin.no}</td>
                 <td className="px-4 py-2 text-right">
                   <div className="flex flex-wrap items-center justify-end gap-2">
                     <button
@@ -105,13 +107,13 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
                       }}
                       className="font-medium text-ink underline"
                     >
-                      Edit
+                      {t.admin.edit}
                     </button>
                     {p.active ? (
                       <form action={deactivateProductFormAction} className="inline">
                         <input type="hidden" name="id" value={p.id} />
                         <button type="submit" className="text-xs font-medium text-red-700 underline">
-                          Remove from catalog
+                          {t.admin.removeFromCatalog}
                         </button>
                       </form>
                     ) : null}
@@ -122,7 +124,7 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
             {paginated.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-4 py-6 text-center text-sm text-muted">
-                  No products found.
+                  {t.admin.noProductsFound}
                 </td>
               </tr>
             )}
@@ -134,19 +136,19 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       )}
 
-      <AdminModal open={createOpen} onClose={() => setCreateOpen(false)} title="Create product">
-        <ProductForm submitLabel="Create" key="create-modal" />
+      <AdminModal open={createOpen} onClose={() => setCreateOpen(false)} title={t.admin.createProductModal}>
+        <ProductForm submitLabel={t.admin.create} key="create-modal" />
       </AdminModal>
 
       <AdminModal
         open={editId !== null && editing !== null}
         onClose={() => setEditId(null)}
-        title="Edit product"
+        title={t.admin.editProductModal}
       >
         {editing ? (
           <ProductForm
             key={editing.id}
-            submitLabel="Save changes"
+            submitLabel={t.admin.saveChanges}
             initial={{
               id: editing.id,
               name: editing.name,
@@ -166,8 +168,13 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
 
 export function ProductsAdminPanel({ products }: { products: ProductRow[] }) {
   return (
-    <Suspense fallback={<p className="text-sm text-body">Loading products…</p>}>
+    <Suspense fallback={<ProductsLoadingFallback />}>
       <ProductsAdminPanelInner products={products} />
     </Suspense>
   );
+}
+
+function ProductsLoadingFallback() {
+  const { t } = useTranslation();
+  return <p className="text-sm text-body">{t.admin.loadingProducts}</p>;
 }

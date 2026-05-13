@@ -1,10 +1,7 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
-import { formatUsd } from "@/lib/format";
-import { orderStatusLabel } from "@/lib/order-status";
-import { IssueInvoiceModalTrigger } from "./issue-invoice-modal-trigger";
+import { AdminOrderDetailContent } from "./order-detail-content";
 
 type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ issued?: string }> };
 
@@ -38,70 +35,27 @@ export default async function AdminOrderDetailPage({ params, searchParams }: Pro
     !hasIssuedInvoice;
 
   return (
-    <div className="space-y-8">
-      {sp.issued ? (
-        <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
-          Invoice issued.
-        </p>
-      ) : null}
-      <div>
-        <h1 className="text-2xl font-semibold text-ink">Order detail</h1>
-        <p className="mt-1 text-sm text-body">
-          {order.user.name} · {order.user.email} · {orderStatusLabel(order.status)}
-        </p>
-      </div>
-
-      <div className="overflow-hidden rounded-lg border border-line">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-panel text-xs uppercase text-body">
-            <tr>
-              <th className="px-4 py-2">Item</th>
-              <th className="px-4 py-2">Qty</th>
-              <th className="px-4 py-2">Unit</th>
-              <th className="px-4 py-2">Line</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line bg-white">
-            {order.lines.map((line) => (
-              <tr key={line.id}>
-                <td className="px-4 py-2">{line.product.name}</td>
-                <td className="px-4 py-2">{line.quantity}</td>
-                <td className="px-4 py-2">{formatUsd(line.unitPriceCents)}</td>
-                <td className="px-4 py-2">{formatUsd(line.quantity * line.unitPriceCents)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="text-sm font-medium">Subtotal {formatUsd(subtotal)}</p>
-
-      {order.notes ? (
-        <div className="rounded-lg border border-line bg-white p-4 text-sm">
-          <p className="text-xs font-medium uppercase text-muted">Customer notes</p>
-          <p className="mt-1 whitespace-pre-wrap">{order.notes}</p>
-        </div>
-      ) : null}
-
-      <section className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-ink">Invoices</h2>
-          {canIssue ? <IssueInvoiceModalTrigger orderId={order.id} computedSubtotalCents={subtotal} /> : null}
-        </div>
-        {order.invoices.length === 0 ? (
-          <p className="text-sm text-body">No invoices yet.</p>
-        ) : (
-          <ul className="space-y-1 text-sm">
-            {order.invoices.map((inv) => (
-              <li key={inv.id}>
-                <Link href="/admin/invoices" className="underline">
-                  {inv.number}
-                </Link>{" "}
-                — {formatUsd(inv.amountCents)} · {inv.status}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </div>
+    <AdminOrderDetailContent
+      orderId={order.id}
+      orderStatus={order.status}
+      userName={order.user.name}
+      userEmail={order.user.email}
+      notes={order.notes}
+      lines={order.lines.map((l) => ({
+        id: l.id,
+        productName: l.product.name,
+        quantity: l.quantity,
+        unitPriceCents: l.unitPriceCents,
+      }))}
+      subtotalCents={subtotal}
+      invoices={order.invoices.map((inv) => ({
+        id: inv.id,
+        number: inv.number,
+        amountCents: inv.amountCents,
+        status: inv.status,
+      }))}
+      canIssue={canIssue}
+      issued={!!sp.issued}
+    />
   );
 }

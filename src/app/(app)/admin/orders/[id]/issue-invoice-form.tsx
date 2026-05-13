@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { issueInvoiceFormAction } from "@/actions/invoices";
 import { formatUsd } from "@/lib/format";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 type Props = {
   orderId: string;
@@ -11,17 +12,18 @@ type Props = {
 
 export function IssueInvoiceForm({ orderId, computedSubtotalCents }: Props) {
   const [state, action] = useActionState(issueInvoiceFormAction, null as { error?: string } | null);
+  const { t } = useTranslation();
 
   return (
     <form action={action} className="w-full max-w-md space-y-4">
       <input type="hidden" name="orderId" value={orderId} />
       {state?.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
       <p className="text-sm text-body">
-        Line-item subtotal: <span className="font-medium text-ink">{formatUsd(computedSubtotalCents)}</span>
+        {t.adminOrder.lineItemSubtotal} <span className="font-medium text-ink">{formatUsd(computedSubtotalCents)}</span>
       </p>
       <label className="block text-sm">
         <span className="text-body">
-          Invoice total (USD) — leave blank to use subtotal; override for quoted / adjusted amounts
+          {t.adminOrder.invoiceTotalLabel}
         </span>
         <input
           name="invoiceTotalUsd"
@@ -36,7 +38,7 @@ export function IssueInvoiceForm({ orderId, computedSubtotalCents }: Props) {
         type="submit"
         className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark"
       >
-        Issue invoice
+        {t.adminOrder.issueInvoice}
       </button>
     </form>
   );

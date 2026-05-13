@@ -3,9 +3,9 @@ import { InvoiceStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { formatUsd } from "@/lib/format";
-import { orderStatusLabel } from "@/lib/order-status";
 import { PortalHeading } from "./portal-heading";
 import { PortalOrdersList, PortalInvoicesList } from "./portal-lists";
+import { PortalStatusMessages } from "./portal-status-messages";
 
 export const metadata = { title: "My account" };
 
@@ -38,7 +38,7 @@ export default async function PortalHomePage({
 
   const orders = rawOrders.map((o) => ({
     id: o.id,
-    status: orderStatusLabel(o.status),
+    status: o.status,
     lineCount: o.lines.length,
     createdAt: new Date(o.createdAt).toLocaleDateString(),
   }));
@@ -54,17 +54,7 @@ export default async function PortalHomePage({
     <div className="space-y-10">
       <div>
         <PortalHeading />
-        {sp.created ? (
-          <div className="mt-2 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950">
-            <p className="font-medium text-emerald-900">Your request was submitted.</p>
-            <p className="mt-2 text-emerald-900">
-              When an invoice is ready, open it from the list below and use{" "}
-              <strong>Pay with hosted checkout</strong> to complete payment on your provider&apos;s site (no card data
-              stored here).
-            </p>
-          </div>
-        ) : null}
-        {sp.paid ? <p className="mt-2 text-sm text-emerald-700">Thank you — payment recorded.</p> : null}
+        <PortalStatusMessages created={!!sp.created} paid={!!sp.paid} />
       </div>
 
       <PortalOrdersList orders={orders} />

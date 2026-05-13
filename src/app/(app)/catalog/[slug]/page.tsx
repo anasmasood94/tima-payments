@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { formatUsd } from "@/lib/format";
+import { ProductDetailContent } from "./product-detail-content";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -19,26 +18,14 @@ export default async function ProductDetailPage({ params }: Props) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <Link href="/catalog" className="text-sm text-body underline">
-        ← Back to catalog
-      </Link>
-      <p className="text-xs font-medium uppercase text-muted">{product.kind}</p>
-      <h1 className="text-3xl font-semibold text-ink">{product.name}</h1>
-      <p className="text-sm text-body">SKU {product.sku}</p>
-      <p className="text-lg font-medium text-ink">{formatUsd(product.priceCents)}</p>
-      <p className="whitespace-pre-wrap text-sm leading-relaxed text-body">{product.description}</p>
-      <p className="text-sm text-body">
-        To purchase, set quantities on the{" "}
-        <Link href="/catalog#shop" className="font-medium underline">
-          catalog
-        </Link>{" "}
-        page and submit an order or quote. After we issue an invoice, pay from{" "}
-        <Link href="/portal" className="font-medium underline">
-          your account
-        </Link>{" "}
-        using hosted checkout.
-      </p>
-    </div>
+    <ProductDetailContent
+      product={{
+        name: product.name,
+        kind: product.kind,
+        sku: product.sku,
+        priceCents: product.priceCents,
+        description: product.description,
+      }}
+    />
   );
 }

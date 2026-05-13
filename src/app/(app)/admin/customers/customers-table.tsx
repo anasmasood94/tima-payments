@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { useTranslation } from "@/lib/i18n/language-context";
 import { useSearchPagination, SearchBar, Pagination } from "@/components/admin-list-controls";
 
 export type CustomerRow = {
@@ -12,6 +13,8 @@ export type CustomerRow = {
 };
 
 export function CustomersTable({ customers }: { customers: CustomerRow[] }) {
+  const { t } = useTranslation();
+
   const searchFn = useCallback(
     (c: CustomerRow, q: string) =>
       c.name.toLowerCase().includes(q) ||
@@ -24,19 +27,26 @@ export function CustomersTable({ customers }: { customers: CustomerRow[] }) {
     useSearchPagination(customers, searchFn);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-ink">{t.admin.customersTitle}</h1>
+          <p className="mt-1 text-sm text-body">{t.admin.customersDesc}</p>
+        </div>
+      </div>
+
       <div className="max-w-sm">
-        <SearchBar value={query} onChange={setQuery} placeholder="Search by name, email, or company…" />
+        <SearchBar value={query} onChange={setQuery} placeholder={t.admin.searchCustomers} />
       </div>
 
       <div className="overflow-hidden rounded-xl border border-line bg-white">
         <table className="w-full text-left text-sm">
           <thead className="bg-panel text-xs uppercase text-body">
             <tr>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">Company</th>
-              <th className="px-4 py-2">Registered</th>
+              <th className="px-4 py-2">{t.admin.name}</th>
+              <th className="px-4 py-2">{t.admin.email}</th>
+              <th className="px-4 py-2">{t.admin.company}</th>
+              <th className="px-4 py-2">{t.admin.registered}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -51,7 +61,7 @@ export function CustomersTable({ customers }: { customers: CustomerRow[] }) {
             {paginated.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-6 text-center text-sm text-muted">
-                  No customers found.
+                  {t.admin.noCustomersFound}
                 </td>
               </tr>
             )}

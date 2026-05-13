@@ -2,9 +2,11 @@
 
 import { useActionState } from "react";
 import { completeMockPaymentFormAction } from "@/actions/payments";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 export function MockPayForm({ paymentId }: { paymentId: string }) {
   const [state, action] = useActionState(completeMockPaymentFormAction, null as { error?: string } | null);
+  const { t } = useTranslation();
 
   return (
     <form action={action} className="space-y-3">
@@ -14,7 +16,7 @@ export function MockPayForm({ paymentId }: { paymentId: string }) {
         type="submit"
         className="w-full rounded-md bg-emerald-700 py-2.5 text-sm font-medium text-white hover:bg-emerald-800"
       >
-        Simulate successful payment
+        {t.paymentFlow.simulatePayment}
       </button>
     </form>
   );
