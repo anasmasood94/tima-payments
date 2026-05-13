@@ -27,10 +27,10 @@ export function SiteFooter() {
               <Link href="/home" className="transition-colors hover:text-ink">{t.nav.home}</Link>
             </li>
             <li>
-              <Link href="/home#about" className="transition-colors hover:text-ink">{t.nav.aboutUs}</Link>
+              <Link href="/about" className="transition-colors hover:text-ink">{t.nav.aboutUs}</Link>
             </li>
             <li>
-              <Link href="/home#services" className="transition-colors hover:text-ink">{t.nav.services}</Link>
+              <Link href="/services" className="transition-colors hover:text-ink">{t.nav.services}</Link>
             </li>
             <li>
               <Link href="/home#contact" className="transition-colors hover:text-ink">{t.nav.contact}</Link>

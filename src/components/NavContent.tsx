@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslation } from "@/lib/i18n/language-context";
 import { logoutAction } from "@/actions/auth";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -9,8 +10,16 @@ type Props = {
   session: { role: string } | null;
 };
 
+const navLinks = [
+  { href: "/home", key: "home" as const },
+  { href: "/about", key: "aboutUs" as const },
+  { href: "/services", key: "services" as const },
+  { href: "/home#contact", key: "contact" as const },
+];
+
 export function NavContent({ session }: Props) {
   const { t } = useTranslation();
+  const pathname = usePathname();
 
   return (
     <header className="bg-white">
@@ -20,18 +29,21 @@ export function NavContent({ session }: Props) {
         </Link>
 
         <nav className="ml-10 flex flex-1 items-center gap-10 text-[15px]">
-          <Link href="/home" className="text-muted transition-colors hover:text-ink">
-            {t.nav.home}
-          </Link>
-          <Link href="/about" className="text-muted transition-colors hover:text-ink">
-            {t.nav.aboutUs}
-          </Link>
-          <Link href="/home#services" className="text-muted transition-colors hover:text-ink">
-            {t.nav.services}
-          </Link>
-          <Link href="/home#contact" className="text-muted transition-colors hover:text-ink">
-            {t.nav.contact}
-          </Link>
+          {navLinks.map((link) => {
+            const isActive =
+              link.href === "/home"
+                ? pathname === "/home"
+                : pathname.startsWith(link.href.split("#")[0]);
+            return (
+              <Link
+                key={link.key}
+                href={link.href}
+                className={`transition-colors hover:text-ink ${isActive ? "text-muted" : "text-ink font-medium"}`}
+              >
+                {t.nav[link.key]}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex shrink-0 items-center gap-4">

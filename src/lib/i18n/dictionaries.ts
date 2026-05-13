@@ -194,6 +194,58 @@ export const dictionaries = {
         { q: "Can I assist with customs clearance/final mileage?", a: "We work with a number of customs clearance and last-mile delivery companies to assist customers with door-to-door services, including truck, express, LTL and other shipping methods." },
       ],
     },
+    servicesPage: {
+      title: "Our Services",
+      subtitle: "B612 Freight Forwarder is obsessed with educating the customer, ensuring solutions get implemented correctly and also with long term relationship building.",
+      cta: "Get A Free Estimate",
+      dropshipping: {
+        title: "DROPSHIPPING",
+        description: "B612 Freight Forwarder Container Drayage Department helps to move your full container (FCL) Import or Export or Domestic Rail shipments direct from any Continental U.S. point of origin. Our national network offers our cargo and freight shipping clients seamless service, reliability, and flexibility that make containerized shipping easy and efficient.",
+        specialTitle: "Drayage and Special Services",
+        items: [
+          "Dependable drayage service in LA/LB area with full range of container-related services, such as loading, unloading and warehousing services.",
+          "Reliable cooperate divisions around the nation for major port drayage services at NY, NC, SC, Oakland, and WA area.",
+          "Company-owned chassis including 45HQ and 20GP available at LA/LB port service centers with no additional charge.",
+          "Over 99% on-time delivery to and from the ports.",
+          "Assembly and distribution trucking service available.",
+          "Excellent customer service for arrange warehouse appt and assistant with customer step by step.",
+        ],
+      },
+      warehousing: {
+        title: "WAREHOUSING",
+        description1: "B612 Tima Inc warehousing operations in the Ontario, CA market providing container unloading, palletizing, storage, pick&pack, FBA, UPS, Fedex, and transloading services for the receiving and distribution of products by pallet, carton or piece.",
+        description2: "Our warehouse services group will customize product preparation including re-ticketing, label replacement, placing on hangers, repacking and repackaging so that its clients can get the greatest leverage from product inventory.",
+        description3: "In today's fast pace environment where retailers and manufacturer must compete with an ever-demanding delivery window by consumers, B612 has developed fast ship services to get product to small parcel delivery providers for their distribution. E-commerce services include inventory management, piece pick and pack with individualized gift wrapping if needed.",
+      },
+      otrTrucking: {
+        title: "OTR TRUCKING",
+        description1: "OTR stands for over the road trucking, also known as long-haul trucking.",
+        description2: "B612 Tima Inc specializes in OTR trucking with shipments up to 44,000lbs. OTR Trucking including FTL, LTL, Dry Vans, Reefer Vans, Box Trucks, Flatbeds, and Step-decks.",
+        description3: "Our domestic Full-Truck-Load delivers to FBA warehouses and private warehouses. Less-than-truck load department deals with transportation of relatively small freight. These range from 1 skid to 20 skids, stackable and non-stack. These shipments are for the transportation of freight belonging to multiple customers or less popular FBA warehouses. These may be dry van or temperature controlled.",
+      },
+      drayage: {
+        title: "DRAYAGE",
+        description: "B612 Freight Forwarder Container Drayage Department helps to move your full container (FCL) Import or Export or Domestic Rail shipments direct from any Continental U.S. point of origin. Our national network offers our cargo and freight shipping clients seamless service, reliability, and flexibility that make containerized shipping easy and efficient.",
+        specialTitle: "Drayage and Special Services",
+        items: [
+          "Dependable drayage service in LA/LB area with full range of container-related services, such as loading, unloading and warehousing services.",
+          "Reliable cooperate divisions around the nation for major port drayage services at NY, NC, SC, Oakland, and WA area.",
+          "Company-owned chassis including 45HQ and 20GP available at LA/LB port service centers with no additional charge.",
+          "Over 99% on-time delivery to door to private warehouse and UPS Direct delivery.",
+          "Assembly and distribution trucking service available.",
+          "Excellent customer service for arrange warehouse appt and assistant with customer step by step.",
+        ],
+      },
+      additionalServices: {
+        title: "Additional Services",
+        cards: [
+          { title: "UPS Hub Direct", description: "Full container direct deliver to UPS HUB with UPS booking from B612 Freight Forwarder." },
+          { title: "Discounted Shipping", description: "Great e-commerce shipping rates with comprehensive shipping services from UPS with B612." },
+          { title: "Shipment Booking", description: "Our China department takes care your freight and air booking with personalized need." },
+          { title: "Customs Service", description: "Questions and needs on customs for the shipments? B612 Tima Inc has customs guidance for you." },
+        ],
+      },
+    },
   },
 
   zh: {
@@ -384,6 +436,58 @@ export const dictionaries = {
         { q: "如何计费？费用是多少？", a: "常见费用包括：\n• 仓储费（按天/托盘/立方米/件）\n• 拣货费\n• 包装费（可选自带包装）\n• 出库费\n• 附加服务如贴标费、换标费等\n我们会提供详细的报价单。" },
         { q: "可以协助清关/尾程吗？", a: "我们与多家清关和尾程配送公司合作，协助客户提供门到门服务，包括卡车、快递、LTL等多种运输方式。" },
       ],
+    },
+    servicesPage: {
+      title: "我们的服务",
+      subtitle: "B612 货运代理致力于客户教育，确保解决方案得到正确实施，并注重建立长期合作关系。",
+      cta: "获取免费报价",
+      dropshipping: {
+        title: "代发货",
+        description: "B612货运代理集装箱拖运部帮助您从美国大陆任何出发地直接运输整箱（FCL）进口、出口或国内铁路货物。我们的全国网络为客户提供无缝服务、可靠性和灵活性，使集装箱运输变得简单高效。",
+        specialTitle: "拖运和特殊服务",
+        items: [
+          "在洛杉矶/长滩地区提供可靠的拖运服务，包括装卸和仓储等全方位集装箱相关服务。",
+          "在纽约、北卡、南卡、奥克兰和华盛顿地区的主要港口提供拖运服务。",
+          "自有底盘包括45HQ和20GP，在洛杉矶/长滩港口服务中心免费使用。",
+          "港口往返准时交付率超过99%。",
+          "提供组装和分销卡车运输服务。",
+          "优质客户服务，协助安排仓库预约并逐步指导客户。",
+        ],
+      },
+      warehousing: {
+        title: "仓储",
+        description1: "B612 Tima Inc在加州安大略市提供仓储运营，包括集装箱卸货、托盘化、存储、拣货包装、FBA、UPS、Fedex和转运服务。",
+        description2: "我们的仓储服务团队将定制产品准备工作，包括重新贴标、标签更换、挂架、重新包装等，使客户能够最大限度地利用产品库存。",
+        description3: "在当今快节奏的环境中，零售商和制造商必须应对消费者日益苛刻的交付窗口。B612开发了快速发货服务，将产品送至小包裹配送商进行分销。电商服务包括库存管理、单件拣货和包装。",
+      },
+      otrTrucking: {
+        title: "OTR 卡车运输",
+        description1: "OTR代表公路长途卡车运输。",
+        description2: "B612 Tima Inc专注于最高44,000磅的OTR卡车运输。包括FTL、LTL、干货车、冷藏车、箱式卡车、平板车和阶梯式平板车。",
+        description3: "我们的国内整车运输服务送达FBA仓库和私人仓库。零担部门处理相对较小的货物运输，从1个到20个托盘，可堆叠和不可堆叠。",
+      },
+      drayage: {
+        title: "拖运",
+        description: "B612货运代理集装箱拖运部帮助您从美国大陆任何出发地直接运输整箱（FCL）进口、出口或国内铁路货物。我们的全国网络为客户提供无缝服务、可靠性和灵活性。",
+        specialTitle: "拖运和特殊服务",
+        items: [
+          "在洛杉矶/长滩地区提供可靠的拖运服务，包括装卸和仓储等全方位集装箱相关服务。",
+          "在纽约、北卡、南卡、奥克兰和华盛顿地区的主要港口提供拖运服务。",
+          "自有底盘包括45HQ和20GP，在洛杉矶/长滩港口服务中心免费使用。",
+          "私人仓库门到门和UPS直接配送准时率超过99%。",
+          "提供组装和分销卡车运输服务。",
+          "优质客户服务，协助安排仓库预约并逐步指导客户。",
+        ],
+      },
+      additionalServices: {
+        title: "附加服务",
+        cards: [
+          { title: "UPS Hub 直送", description: "通过B612货运代理的UPS预约，整箱直接配送至UPS HUB。" },
+          { title: "折扣运输", description: "通过B612与UPS合作，提供优惠的电商运输费率和全面的运输服务。" },
+          { title: "货运预订", description: "我们的中国部门为您提供个性化的海运和空运预订服务。" },
+          { title: "报关服务", description: "对货物报关有疑问或需求？B612 Tima Inc为您提供报关指导。" },
+        ],
+      },
     },
   },
 } as const;
