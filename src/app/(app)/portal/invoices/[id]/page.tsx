@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { InvoiceStatus, OrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
+import { generateCsrfToken } from "@/lib/csrf";
 import { InvoiceDetailContent } from "./invoice-detail-content";
 
 type Props = { params: Promise<{ id: string }> };
@@ -33,8 +34,11 @@ export default async function PortalInvoicePage({ params }: Props) {
   const amountDiffersFromLines = lineSubtotalCents !== invoice.amountCents;
   const isDraftPlaced = invoice.status === InvoiceStatus.DRAFT && invoice.order.status === OrderStatus.PLACED;
 
+  const csrfToken = await generateCsrfToken();
+
   return (
     <InvoiceDetailContent
+      csrfToken={csrfToken}
       invoiceNumber={invoice.number}
       invoiceId={invoice.id}
       amountCents={invoice.amountCents}

@@ -2,6 +2,10 @@ import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
 const AIRWALLEX_WEBHOOK_MAX_SKEW_MS = 10 * 60 * 1000;
 
+function allowUnsignedWebhooks(): boolean {
+  return process.env.ALLOW_UNSIGNED_WEBHOOKS === "true";
+}
+
 /**
  * Airwallex: https://www.airwallex.com/docs/developer-tools/webhooks/listen-for-webhook-events
  * `x-signature` is hex(HMAC-SHA256(secret, x-timestamp + rawBody)) (timestamp as string, then body bytes unchanged).
@@ -9,7 +13,7 @@ const AIRWALLEX_WEBHOOK_MAX_SKEW_MS = 10 * 60 * 1000;
  */
 export function verifyAirwallexWebhookSignature(headers: Headers, rawBody: string, secret: string | undefined): boolean {
   if (!secret || secret.length === 0) {
-    return process.env.NODE_ENV !== "production";
+    return allowUnsignedWebhooks();
   }
 
   const ts = headers.get("x-timestamp")?.trim();
@@ -44,7 +48,7 @@ export function verifyAirwallexWebhookSignature(headers: Headers, rawBody: strin
  */
 export function verifyStandardWebhookHmac(headers: Headers, rawBody: string, secret: string | undefined): boolean {
   if (!secret || secret.length === 0) {
-    return process.env.NODE_ENV !== "production";
+    return allowUnsignedWebhooks();
   }
 
   const header =
@@ -78,7 +82,7 @@ export function verifyStandardWebhookHmac(headers: Headers, rawBody: string, sec
  */
 export function verifyAdyenWebhookSignature(headers: Headers, rawBody: string, hmacKey: string | undefined): boolean {
   if (!hmacKey || hmacKey.length === 0) {
-    return process.env.NODE_ENV !== "production";
+    return allowUnsignedWebhooks();
   }
 
   let item: Record<string, unknown>;
@@ -133,7 +137,7 @@ export function verifyWorldpayWebhookAuth(headers: Headers, rawBody: string): bo
   const password = process.env.WORLDPAY_WEBHOOK_PASSWORD;
 
   if (!username && !password) {
-    return process.env.NODE_ENV !== "production";
+    return allowUnsignedWebhooks();
   }
 
   const authHeader = headers.get("authorization") ?? headers.get("Authorization");
@@ -168,7 +172,7 @@ export function verifyWorldpayWebhookAuth(headers: Headers, rawBody: string): bo
  */
 export function verifyCybersourceWebhookSignature(headers: Headers, rawBody: string, secret: string | undefined): boolean {
   if (!secret || secret.length === 0) {
-    return process.env.NODE_ENV !== "production";
+    return allowUnsignedWebhooks();
   }
 
   const sig =
@@ -199,7 +203,7 @@ export function verifyCybersourceWebhookSignature(headers: Headers, rawBody: str
  */
 export function verifyNuveiWebhookChecksum(rawBody: string, secretKey: string | undefined): boolean {
   if (!secretKey || secretKey.length === 0) {
-    return process.env.NODE_ENV !== "production";
+    return allowUnsignedWebhooks();
   }
 
   let body: Record<string, unknown>;

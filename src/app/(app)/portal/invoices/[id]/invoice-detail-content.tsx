@@ -15,6 +15,7 @@ type PaymentData = {
 };
 
 type Props = {
+  csrfToken: string;
   invoiceNumber: string;
   invoiceId: string;
   amountCents: number;
@@ -32,6 +33,7 @@ type Props = {
 };
 
 export function InvoiceDetailContent({
+  csrfToken,
   invoiceNumber,
   invoiceId,
   amountCents,
@@ -104,7 +106,7 @@ export function InvoiceDetailContent({
       ) : null}
 
       {canPay ? (
-        <InvoicePayForm invoiceId={invoiceId} />
+        <InvoicePayForm invoiceId={invoiceId} csrfToken={csrfToken} />
       ) : isDraftPlaced ? null : orderPaid ? (
         <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950">
           <p className="font-medium">{t.portalInvoice.noPaymentRequired}</p>

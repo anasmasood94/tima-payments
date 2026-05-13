@@ -4,13 +4,14 @@ import { useActionState } from "react";
 import { completeMockPaymentFormAction } from "@/actions/payments";
 import { useTranslation } from "@/lib/i18n/language-context";
 
-export function MockPayForm({ paymentId }: { paymentId: string }) {
+export function MockPayForm({ paymentId, csrfToken }: { paymentId: string; csrfToken: string }) {
   const [state, action] = useActionState(completeMockPaymentFormAction, null as { error?: string } | null);
   const { t } = useTranslation();
 
   return (
     <form action={action} className="space-y-3">
       <input type="hidden" name="paymentId" value={paymentId} />
+      <input type="hidden" name="_csrf" value={csrfToken} />
       {state?.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
       <button
         type="submit"

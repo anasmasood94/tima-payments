@@ -1,6 +1,7 @@
 import { PaymentGatewayId, PaymentStatus, Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { prisma } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 import { getAdapterByGatewayId } from "./registry";
 import { applyPaymentStatusByProviderRef } from "./apply-payment-status";
 import { parseWebhookBody } from "./parse-webhook-body";
@@ -24,6 +25,15 @@ function toJsonPayload(parsed: unknown): Prisma.InputJsonValue {
 }
 
 export async function handleProviderWebhook(gatewayId: PaymentGatewayId, req: Request) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
+  const rl = rateLimit("webhook", ip, 60, 60_000);
+  if (!rl.allowed) {
+    return new Response("rate limited", { status: 429 });
+  }
+
   const raw = await req.text();
   const adapter = getAdapterByGatewayId(gatewayId);
 

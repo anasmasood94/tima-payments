@@ -2,8 +2,13 @@
 
 import { PaymentGatewayId } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth/session";
+
+const gatewaySchema = z.object({
+  gateway: z.nativeEnum(PaymentGatewayId),
+});
 
 const ACTIVE_GATEWAY_KEY = "active_payment_gateway";
 const ALLOWED_GATEWAYS = new Set<string>([
@@ -27,8 +32,12 @@ export async function updateActiveGatewayAction(
 ) {
   await requireAdmin();
 
-  const gateway = formData.get("gateway");
-  if (typeof gateway !== "string" || !ALLOWED_GATEWAYS.has(gateway)) {
+  const parsed = gatewaySchema.safeParse({ gateway: formData.get("gateway") });
+  if (!parsed.success) {
+    return { error: "Invalid gateway." };
+  }
+  const { gateway } = parsed.data;
+  if (!ALLOWED_GATEWAYS.has(gateway)) {
     return { error: "Invalid gateway." };
   }
 

@@ -4,18 +4,25 @@ import { InvoiceStatus, OrderStatus, PaymentStatus } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { getOrderCheckoutAdapter } from "@/lib/payments/order-checkout";
 
-function parseCatalogQuantities(formData: FormData): { productId: string; quantity: number }[] {
-  const lines: { productId: string; quantity: number }[] = [];
+const catalogLineSchema = z.object({
+  productId: z.string().min(1),
+  quantity: z.number().int().positive().max(10_000),
+});
+
+function parseCatalogQuantities(formData: FormData): z.infer<typeof catalogLineSchema>[] {
+  const lines: z.infer<typeof catalogLineSchema>[] = [];
   for (const [key, val] of formData.entries()) {
     if (!key.startsWith("qty_")) continue;
     const productId = key.slice(4);
     const quantity = Number(val);
-    if (!Number.isFinite(quantity) || quantity <= 0) continue;
-    lines.push({ productId, quantity: Math.floor(quantity) });
+    const parsed = catalogLineSchema.safeParse({ productId, quantity: Math.floor(quantity) });
+    if (!parsed.success) continue;
+    lines.push(parsed.data);
   }
   return lines;
 }

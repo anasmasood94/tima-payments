@@ -13,9 +13,11 @@ type Props = {
   invoiceId: string;
   gateway: string;
   useAirwallexHpp: boolean;
+  csrfToken: string;
+  isMock?: boolean;
 };
 
-export function PayContent({ paymentId, orderId, amountCents, invoiceId, gateway, useAirwallexHpp }: Props) {
+export function PayContent({ paymentId, orderId, amountCents, invoiceId, gateway, useAirwallexHpp, csrfToken, isMock }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -27,9 +29,9 @@ export function PayContent({ paymentId, orderId, amountCents, invoiceId, gateway
         <h1 className="text-2xl font-semibold text-ink">{t.paymentFlow.hostedCheckout}</h1>
         {useAirwallexHpp ? (
           <p className="mt-2 text-sm text-body">{t.paymentFlow.airwallexDesc}</p>
-        ) : (
+        ) : isMock ? (
           <p className="mt-2 text-sm text-body">{t.paymentFlow.mockDesc}</p>
-        )}
+        ) : null}
       </div>
       <div className="rounded-lg border border-line bg-white p-4 text-sm">
         <p className="text-ink">
@@ -38,7 +40,13 @@ export function PayContent({ paymentId, orderId, amountCents, invoiceId, gateway
         </p>
         <p className="mt-2 text-xs text-muted">{t.paymentFlow.gateway} {gateway}</p>
       </div>
-      {useAirwallexHpp ? <AirwallexHppBridge paymentId={paymentId} /> : <MockPayForm paymentId={paymentId} />}
+      {useAirwallexHpp ? (
+        <AirwallexHppBridge paymentId={paymentId} />
+      ) : isMock ? (
+        <MockPayForm paymentId={paymentId} csrfToken={csrfToken} />
+      ) : (
+        <p className="text-sm text-body">This payment gateway is not available.</p>
+      )}
     </div>
   );
 }

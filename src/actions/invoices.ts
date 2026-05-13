@@ -3,8 +3,14 @@
 import { InvoiceStatus, OrderStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth/session";
+
+const issueInvoiceSchema = z.object({
+  orderId: z.string().min(1).max(64),
+  amountOverrideCents: z.number().int().min(1).nullable(),
+});
 
 function nextInvoiceNumber() {
   const year = new Date().getFullYear();
@@ -13,6 +19,9 @@ function nextInvoiceNumber() {
 }
 
 export async function issueInvoiceForOrder(orderId: string, amountOverrideCents: number | null = null) {
+  const parsed = issueInvoiceSchema.safeParse({ orderId, amountOverrideCents });
+  if (!parsed.success) return { error: "Invalid input." };
+
   await requireAdmin();
 
   const order = await prisma.order.findUnique({

@@ -2,18 +2,24 @@
 
 import { PaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAdapterByGatewayId } from "@/lib/payments/registry";
 import { settlePaymentStatus } from "@/lib/payments/settle-payment";
 
+const refundSchema = z.object({
+  paymentId: z.string().min(1).max(64),
+});
+
 export async function refundPaymentAction(_prev: unknown, formData: FormData) {
   await requireAdmin();
 
-  const paymentId = formData.get("paymentId");
-  if (typeof paymentId !== "string" || !paymentId) {
+  const parsed = refundSchema.safeParse({ paymentId: formData.get("paymentId") });
+  if (!parsed.success) {
     return { error: "Missing payment ID." };
   }
+  const { paymentId } = parsed.data;
 
   const payment = await prisma.payment.findUnique({
     where: { id: paymentId },

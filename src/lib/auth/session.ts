@@ -2,6 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { SESSION_COOKIE } from "./constants";
 import type { UserRole } from "@prisma/client";
+import { prisma } from "@/lib/db";
 
 export type SessionPayload = {
   sub: string;
@@ -71,6 +72,13 @@ export async function requireSession(): Promise<SessionPayload> {
 export async function requireAdmin(): Promise<SessionPayload> {
   const session = await requireSession();
   if (session.role !== "ADMIN") {
+    throw new Error("Forbidden");
+  }
+  const user = await prisma.user.findUnique({
+    where: { id: session.sub },
+    select: { role: true },
+  });
+  if (!user || user.role !== "ADMIN") {
     throw new Error("Forbidden");
   }
   return session;

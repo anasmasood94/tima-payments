@@ -2,6 +2,7 @@
 
 import { OrderStatus, PaymentGatewayId, PaymentStatus } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { revalidatePathsAfterResponse } from "@/lib/revalidate-after-response";
 import { requireSession } from "@/lib/auth/session";
@@ -12,6 +13,9 @@ import {
   airwallexLoginDetailed,
   retrieveAirwallexPaymentIntent,
 } from "@/lib/payments/airwallex-api";
+import { validateCsrfToken } from "@/lib/csrf";
+
+const cuidSchema = z.string().min(1).max(64);
 
 function resolveAirwallexJsEnv(): "demo" | "prod" {
   const explicit = process.env.NEXT_PUBLIC_AIRWALLEX_ENV?.toLowerCase();
@@ -30,6 +34,9 @@ export type SyncAirwallexOrderPaymentsResult =
  * Use after the shopper returns from Hosted Payment Page and for short polling while webhooks may be delayed.
  */
 export async function syncAirwallexPaymentsForOrderAction(orderId: string): Promise<SyncAirwallexOrderPaymentsResult> {
+  const idParsed = cuidSchema.safeParse(orderId);
+  if (!idParsed.success) return { ok: false, error: "Invalid order ID." };
+
   const session = await requireSession();
   let appliedChange = false;
 
@@ -88,11 +95,16 @@ export async function syncAirwallexPaymentsForOrderAction(orderId: string): Prom
 }
 
 export async function startHostedCheckoutFormAction(_prev: unknown, formData: FormData) {
+  const csrfValid = await validateCsrfToken(formData.get("_csrf") as string);
+  if (!csrfValid) return { error: "Invalid request. Please refresh and try again." };
+
   const session = await requireSession();
-  const invoiceId = formData.get("invoiceId");
-  if (typeof invoiceId !== "string" || !invoiceId) {
+  const invoiceIdRaw = formData.get("invoiceId");
+  const invoiceIdParsed = cuidSchema.safeParse(invoiceIdRaw);
+  if (!invoiceIdParsed.success) {
     return { error: "Invalid invoice." };
   }
+  const invoiceId = invoiceIdParsed.data;
 
   const invoice = await prisma.invoice.findFirst({
     where: { id: invoiceId, order: { userId: session.sub } },
@@ -173,6 +185,9 @@ export type PrepareAirwallexHostedPaymentResult =
 export async function prepareAirwallexHostedPaymentAction(
   paymentId: string,
 ): Promise<PrepareAirwallexHostedPaymentResult> {
+  const payIdParsed = cuidSchema.safeParse(paymentId);
+  if (!payIdParsed.success) return { ok: false, error: "Invalid payment ID." };
+
   const session = await requireSession();
   const payment = await prisma.payment.findFirst({
     where: { id: paymentId, invoice: { order: { userId: session.sub } } },
@@ -321,14 +336,22 @@ export async function prepareAirwallexHostedPaymentAction(
 }
 
 export async function completeMockPaymentFormAction(_prev: unknown, formData: FormData) {
-  const paymentId = formData.get("paymentId");
-  if (typeof paymentId !== "string" || !paymentId) {
+  if (process.env.NODE_ENV === "production") {
+    return { error: "Mock payments are not available in production." };
+  }
+
+  const csrfValid = await validateCsrfToken(formData.get("_csrf") as string);
+  if (!csrfValid) return { error: "Invalid request. Please refresh and try again." };
+
+  const paymentIdRaw = formData.get("paymentId");
+  const paymentIdParsed = cuidSchema.safeParse(paymentIdRaw);
+  if (!paymentIdParsed.success) {
     return { error: "Invalid payment." };
   }
 
   const session = await requireSession();
   const result = await applyPaymentStatusByIdForUser({
-    paymentId,
+    paymentId: paymentIdParsed.data,
     userId: session.sub,
     status: PaymentStatus.SUCCEEDED,
   });
