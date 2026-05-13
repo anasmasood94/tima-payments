@@ -35,7 +35,7 @@ export default async function AdminHomePage() {
   return (
     <div className="space-y-8">
       <AdminHeading />
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
         {cards.map((card) => (
           <Link
             key={card.href}

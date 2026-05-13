@@ -8,7 +8,7 @@ export function SiteFooter({ loggedIn }: { loggedIn?: boolean }) {
 
   return (
     <footer className={`mt-auto bg-white text-neutral-600 ${loggedIn ? "border-t border-line" : ""}`}>
-      <div className="grid gap-10 px-20 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-10 px-5 py-10 sm:grid-cols-2 sm:px-10 lg:grid-cols-4 lg:px-20 lg:py-14">
         {/* Brand + Business Hours */}
         <div>
           <h3 className="text-xl font-bold text-ink">和 仓</h3>
@@ -86,7 +86,7 @@ export function SiteFooter({ loggedIn }: { loggedIn?: boolean }) {
 
       {/* Bottom bar */}
       <div className="border-t border-neutral-200">
-        <p className="px-20 py-5 text-center text-xs text-neutral-400">
+        <p className="px-5 py-5 text-center text-xs text-neutral-400 sm:px-10 lg:px-20">
           &copy; {new Date().getFullYear()} {t.footer.copyright}
         </p>
       </div>

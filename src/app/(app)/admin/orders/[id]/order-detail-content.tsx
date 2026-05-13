@@ -107,8 +107,8 @@ export function AdminOrderDetailContent({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-line shadow-sm">
-        <table className="w-full text-left text-sm">
+      <div className="overflow-x-auto rounded-xl border border-line shadow-sm">
+        <table className="w-full min-w-[480px] text-left text-sm">
           <thead className="bg-gradient-to-r from-blue-50 to-transparent text-xs uppercase text-body">
             <tr>
               <th className="px-4 py-3 font-semibold">{t.adminOrder.item}</th>

@@ -46,8 +46,8 @@ export function CustomersTable({ customers }: { customers: CustomerRow[] }) {
         <SearchBar value={query} onChange={setQuery} placeholder={t.admin.searchCustomers} />
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-line bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
+      <div className="overflow-x-auto rounded-xl border border-line bg-white shadow-sm">
+        <table className="w-full min-w-[500px] text-left text-sm">
           <thead className="bg-gradient-to-r from-indigo-50 to-transparent text-xs uppercase text-body">
             <tr>
               <th className="px-4 py-3 font-semibold">{t.admin.name}</th>

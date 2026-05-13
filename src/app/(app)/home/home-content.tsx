@@ -21,8 +21,8 @@ export function HomeContent() {
           <source src="/file.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex h-full flex-col items-start justify-center px-20">
-          <h1 className="max-w-4xl text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+        <div className="relative z-10 flex h-full flex-col items-start justify-center px-5 sm:px-10 lg:px-20">
+          <h1 className="max-w-4xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-6xl">
             {t.hero.title}
             <br />
             {t.hero.subtitle}
@@ -38,9 +38,9 @@ export function HomeContent() {
       </section>
 
       {/* ── About / Fulfillment ── */}
-      <section id="about" className="bg-white px-20 py-10">
+      <section id="about" className="bg-white px-5 py-10 sm:px-10 lg:px-20">
         <div className="grid items-stretch overflow-hidden rounded-md bg-panel lg:grid-cols-2">
-          <div className="flex flex-col justify-center px-20 py-20">
+          <div className="flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-20 lg:py-20">
             <h3 className="text-sm font-bold uppercase tracking-wide text-brand">{t.about.tag}</h3>
             <h2 className="mt-4 whitespace-pre-line text-3xl font-bold leading-snug text-ink sm:text-4xl">
               {t.about.title}
@@ -63,7 +63,7 @@ export function HomeContent() {
 
       {/* ── Service Categories (3-column text) ── */}
       <section className="bg-white py-20">
-        <div className="mx-auto grid max-w-5xl gap-16 px-20 sm:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl gap-10 px-5 sm:grid-cols-3 sm:gap-16 sm:px-10 lg:px-20">
           {(["threepl", "transport", "overseas"] as const).map((key, idx) => (
             <div key={key} className="flex flex-col items-center">
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-brand/10">
@@ -100,7 +100,7 @@ export function HomeContent() {
       <section className="relative">
         <Image src="/warehouse.jpg" alt="Warehouse interior" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-3xl px-20 py-16">
+        <div className="relative z-10 max-w-3xl px-5 py-10 sm:px-10 lg:px-20 lg:py-16">
           <h2 className="whitespace-pre-line text-3xl font-bold text-white sm:text-4xl">
             {t.advantage.title}
           </h2>
@@ -125,9 +125,9 @@ export function HomeContent() {
 
       {/* ── Our Services (image cards) ── */}
       <section id="services" className="bg-white py-20">
-        <div className="px-20">
-          <h2 className="text-center text-3xl font-bold text-ink">{t.ourServices.title}</h2>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        <div className="px-5 sm:px-10 lg:px-20">
+          <h2 className="text-center text-2xl font-bold text-ink sm:text-3xl">{t.ourServices.title}</h2>
+          <div className="mt-8 grid gap-6 sm:mt-12 sm:grid-cols-2">
             {[
               { src: "/dropshipping.jpg", alt: "Dropshipping" },
               { src: "/warehousing-service.jpg", alt: "Warehousing" },
@@ -163,8 +163,8 @@ export function HomeContent() {
       <section id="contact" className="relative py-20">
         <Image src="/moving.jpg" alt="Testimonials background" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/55" />
-        <div className="relative z-10 px-20">
-          <h2 className="text-center text-3xl font-bold text-white">{t.testimonials.title}</h2>
+        <div className="relative z-10 px-5 sm:px-10 lg:px-20">
+          <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">{t.testimonials.title}</h2>
           <div className="mt-12 grid gap-10 sm:grid-cols-3">
             {t.testimonials.items.map((item, i) => (
               <div key={i} className="flex flex-col items-center text-center">

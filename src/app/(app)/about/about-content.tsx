@@ -13,15 +13,15 @@ export function AboutContent() {
       <section className="relative h-[50vh] min-h-[340px] overflow-hidden">
         <Image src="/nsplsh.jpg" alt="Container port" fill priority className="object-cover" />
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-20 text-center">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-5 text-center sm:px-10 lg:px-20">
           <h1 className="text-5xl font-bold text-white sm:text-6xl">{t.aboutPage.title}</h1>
         </div>
       </section>
 
       {/* ── Company Intro ── */}
-      <section className="bg-white px-20 py-10">
+      <section className="bg-white px-5 py-10 sm:px-10 lg:px-20">
         <div className="grid items-stretch overflow-hidden rounded-md bg-panel lg:grid-cols-2">
-          <div className="flex flex-col justify-center px-14 py-16 lg:px-20">
+          <div className="flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-20 lg:py-16">
             <h2 className="text-2xl font-bold leading-snug text-neutral-800 sm:text-3xl">
               {t.aboutPage.subtitle}
             </h2>
@@ -42,7 +42,7 @@ export function AboutContent() {
       <section className="relative py-24">
         <Image src="/11062b.jpg" alt="Logistics facility aerial" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 mx-auto max-w-4xl px-20 text-center">
+        <div className="relative z-10 mx-auto max-w-4xl px-5 text-center sm:px-10 lg:px-20">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">{t.aboutPage.endToEnd.title}</h2>
           <p className="mt-6 text-[15px] leading-[1.8] text-neutral-300">{t.aboutPage.endToEnd.description}</p>
         </div>
@@ -50,14 +50,14 @@ export function AboutContent() {
 
       {/* ── Workflow Automation + Process Steps ── */}
       <section className="bg-white py-24">
-        <div className="mx-auto max-w-4xl px-20 text-center">
-          <h2 className="text-3xl font-bold text-neutral-800 sm:text-4xl">{t.aboutPage.workflow.title}</h2>
+        <div className="mx-auto max-w-4xl px-5 text-center sm:px-10 lg:px-20">
+          <h2 className="text-2xl font-bold text-neutral-800 sm:text-3xl lg:text-4xl">{t.aboutPage.workflow.title}</h2>
           <p className="mx-auto mt-6 max-w-3xl text-[15px] leading-[1.8] text-neutral-500">
             {t.aboutPage.workflow.description}
           </p>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-[1200px] gap-12 px-20 sm:grid-cols-2">
+        <div className="mx-auto mt-10 grid max-w-[1200px] gap-8 px-5 sm:mt-16 sm:grid-cols-2 sm:gap-12 sm:px-10 lg:px-20">
           {[
             { src: "/Order Booking.avif", alt: "Order Booking" },
             { src: "/Dispatch_Routing.jpg", alt: "Dispatch & Routing" },
@@ -79,8 +79,8 @@ export function AboutContent() {
 
       {/* ── Cost Tracking ── */}
       <section className="bg-[#e8f5f0] py-24">
-        <div className="mx-auto max-w-4xl px-20 text-center">
-          <h2 className="text-3xl font-bold text-neutral-800 sm:text-4xl">{t.aboutPage.costSection.title}</h2>
+        <div className="mx-auto max-w-4xl px-5 text-center sm:px-10 lg:px-20">
+          <h2 className="text-2xl font-bold text-neutral-800 sm:text-3xl lg:text-4xl">{t.aboutPage.costSection.title}</h2>
           <p className="mt-4 text-[15px] text-neutral-500">{t.aboutPage.costSection.subtitle}</p>
           <a
             href="mailto:FF@B612timainc.com?subject=Quote%20from%20website"
@@ -89,7 +89,7 @@ export function AboutContent() {
             {t.aboutPage.costSection.cta}
           </a>
         </div>
-        <div className="mx-auto mt-16 grid max-w-6xl gap-10 px-20 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto mt-10 grid max-w-6xl gap-8 px-5 sm:mt-16 sm:grid-cols-2 sm:gap-10 sm:px-10 lg:grid-cols-4 lg:px-20">
           {t.aboutPage.costFeatures.map((feat, i) => (
             <div key={i}>
               <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-white">
@@ -124,8 +124,8 @@ export function AboutContent() {
 
       {/* ── FAQ ── */}
       <section className="bg-white py-24">
-        <div className="mx-auto max-w-6xl px-20">
-          <h2 className="text-center text-5xl font-bold text-neutral-800">{t.aboutPage.faqTitle}</h2>
+        <div className="mx-auto max-w-6xl px-5 sm:px-10 lg:px-20">
+          <h2 className="text-center text-3xl font-bold text-neutral-800 sm:text-4xl lg:text-5xl">{t.aboutPage.faqTitle}</h2>
           <div className="mt-16 divide-y divide-neutral-200">
             {t.aboutPage.faqs.map((faq, i) => (
               <FaqItem key={i} index={i + 1} question={faq.q} answer={faq.a} />

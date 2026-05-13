@@ -27,7 +27,7 @@ export function ServicesContent() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex h-full flex-col items-start justify-end px-20 pb-20">
+        <div className="relative z-10 flex h-full flex-col items-start justify-end px-5 pb-10 sm:px-10 sm:pb-16 lg:px-20 lg:pb-20">
           <h1 className="text-4xl font-bold text-white sm:text-5xl">
             {svc.title}
           </h1>
@@ -62,7 +62,7 @@ export function ServicesContent() {
               ))}
             </ul>
           </div>
-          <div className="relative min-h-[400px]">
+          <div className="relative min-h-[250px] sm:min-h-[400px]">
             <Image
               src="/services/DROPSHIPPING.jpg"
               alt="Dropshipping service"
@@ -76,7 +76,7 @@ export function ServicesContent() {
       {/* ── WAREHOUSING — image left, text right ── */}
       <section className="px-10 py-14 lg:px-20">
         <div className="mx-auto grid max-w-7xl items-stretch overflow-hidden md:grid-cols-2">
-          <div className="relative min-h-[400px]">
+          <div className="relative min-h-[250px] sm:min-h-[400px]">
             <Image
               src="/services/WAREHOUSING.jpg"
               alt="Warehousing operations"
@@ -110,7 +110,7 @@ export function ServicesContent() {
               <p>{svc.otrTrucking.description3}</p>
             </div>
           </div>
-          <div className="relative min-h-[400px]">
+          <div className="relative min-h-[250px] sm:min-h-[400px]">
             <Image
               src="/services/TRUCKING.jpg"
               alt="OTR trucking"
@@ -124,7 +124,7 @@ export function ServicesContent() {
       {/* ── DRAYAGE — image left, text right ── */}
       <section className="px-10 py-14 lg:px-20">
         <div className="mx-auto grid max-w-7xl items-stretch overflow-hidden md:grid-cols-2">
-          <div className="relative min-h-[400px]">
+          <div className="relative min-h-[250px] sm:min-h-[400px]">
             <Image
               src="/services/DRAYAGE.jpg"
               alt="Drayage service"
