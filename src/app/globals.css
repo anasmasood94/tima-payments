@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Helvetica W01";
+  src: url("/fonts/helvetica-w01-roman.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica W01";
+  src: url("/fonts/helvetica-w01-bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Avenir LT W01";
+  src: url("/fonts/avenir-lt-w01-35-light.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #000000;
@@ -19,4 +43,72 @@
 body {
   background: var(--background);
   color: var(--body-text);
+}
+
+@keyframes b612-float-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .b612-float-in {
+    animation: b612-float-in 1200ms 1ms cubic-bezier(0.445, 0.05, 0.55, 0.95) backwards;
+  }
+}
+
+.b612-about-shell {
+  width: calc(100% - 40px);
+}
+
+.b612-services-strip {
+  width: calc(100% - 40px);
+}
+
+.b612-live-button {
+  transition: all 0.2s ease, visibility 0s;
+}
+
+.b612-live-button:hover {
+  letter-spacing: 0.1em;
+}
+
+.b612-about-content {
+  padding: 36px 32px;
+}
+
+@media (min-width: 1024px) {
+  .b612-about-shell,
+  .b612-services-strip {
+    min-width: 980px;
+    width: calc(100% - 160px);
+  }
+
+  .b612-about-content {
+    padding: 36px 22px 36px 68px;
+  }
+}
+
+@keyframes b612-float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .b612-float-up {
+    animation: b612-float-up 1200ms 1ms cubic-bezier(0.445, 0.05, 0.55, 0.95) backwards;
+  }
 }

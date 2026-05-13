@@ -4,6 +4,49 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/language-context";
 
+const serviceImages = [
+  { src: "/service-dropshipping-live.jpg", alt: "Dropshipping" },
+  { src: "/service-warehousing-live.jpg", alt: "Warehousing" },
+  { src: "/service-trucking-live.jpg", alt: "OTR Trucking" },
+  { src: "/service-drayage-live.jpg", alt: "Drayage" },
+];
+
+function ServiceCategoryIcon({ type }: { type: "threepl" | "transport" | "overseas" }) {
+  return (
+    <div className="b612-float-up flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[rgba(20,170,60,0.3)] text-black">
+      {type === "threepl" && (
+        <svg className="h-[31px] w-[25px]" fill="currentColor" viewBox="54 43.5 92 113" aria-hidden="true">
+          <path d="M109.061 43.5H54v113h92v-76l-36.939-37zm2.468 14.411l20.086 20.117h-20.086V57.911zm-49.103 90.148V51.941h40.676v34.527h34.471v61.591H62.426z" />
+        </svg>
+      )}
+      {type === "transport" && (
+        <svg className="h-[24px] w-[31px]" fill="currentColor" viewBox="32.5 47.5 135 105" aria-hidden="true">
+          <path d="M167.5 97.708l-24.343-27.845h-17.651V47.5H32.5v88.026h19.018c.409 9.427 8.244 16.974 17.844 16.974 9.596 0 17.426-7.546 17.835-16.974h24.598c.408 9.427 8.243 16.974 17.843 16.974 9.596 0 17.429-7.546 17.837-16.974H167.5V97.708zM40.934 55.869h76.14v71.29h-76.14v-71.29zm28.428 88.264c-4.951 0-9.015-3.795-9.412-8.607h18.813c-.393 4.811-4.455 8.607-9.401 8.607zm60.278 0c-4.95 0-9.016-3.795-9.409-8.607h18.813c-.396 4.811-4.459 8.607-9.404 8.607zm29.426-16.974h-33.561V78.231h13.803l19.758 22.6v26.328z" />
+        </svg>
+      )}
+      {type === "overseas" && (
+        <svg className="h-[27px] w-[31px]" fill="currentColor" viewBox="128 170.667 768 682.666" aria-hidden="true">
+          <path d="M640 725.333v-128h128v128h85.333v128h-128v-128h-42.666v128h-128v-128zm213.333-128H768v-51.2l-256-256-256 256V768h256v85.333H170.667V554.667H128l384-384 384 384h-42.667z" />
+        </svg>
+      )}
+    </div>
+  );
+}
+
+function TestimonialQuoteIcon() {
+  return (
+    <svg
+      className="b612-float-up h-[30px] w-10 fill-white"
+      preserveAspectRatio="xMidYMid meet"
+      viewBox="-0.02 -0.005 54.82 38.305"
+      aria-hidden="true"
+    >
+      <path d="M2.1 37.4v-.5c4.4-.9 8.5-3.1 11.6-6.5 2.8-3.3 4.5-7.4 4.7-11.7-2.6 3.1-5.5 4.6-8.7 4.6-1.9 0-3.7-.5-5.3-1.5-1.4-.8-2.6-2.1-3.3-3.7C.3 16.4 0 14.5 0 12.7-.2 9.3 1.1 6 3.4 3.5 5.7 1.2 8.8-.1 12 0c3.2-.1 6.3 1.3 8.3 3.7 2.1 2.5 3.2 6.1 3.2 10.8 0 2-.2 4-.6 5.9-.4 2-1.2 4-2.2 5.8-1.1 2.1-2.6 3.9-4.3 5.6-1.8 1.7-3.8 3.2-6 4.3-2.1 1.1-4.3 1.8-6.6 2.2l-1.7-.9z" />
+      <path d="M33.4 37.4v-.5c4.4-.9 8.5-3.1 11.6-6.5 2.8-3.3 4.5-7.4 4.7-11.7-2.6 3.1-5.5 4.6-8.7 4.6-1.9 0-3.7-.5-5.3-1.5-1.5-.9-2.6-2.2-3.3-3.8-.8-1.7-1.1-3.6-1.1-5.4-.2-3.4 1.1-6.7 3.4-9.2C37 1.2 40.1-.1 43.3 0c3.2-.1 6.3 1.3 8.3 3.7 2.1 2.5 3.2 6.1 3.2 10.8 0 2-.2 4-.6 5.9-.4 2-1.2 4-2.2 5.8-1.1 2.1-2.6 3.9-4.3 5.6-1.8 1.7-3.8 3.2-6 4.3-2.1 1.1-4.3 1.8-6.6 2.2l-1.7-.9z" />
+    </svg>
+  );
+}
+
 export function HomeContent() {
   const { t } = useTranslation();
 
@@ -20,17 +63,19 @@ export function HomeContent() {
         >
           <source src="/file.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 flex h-full flex-col items-start justify-center px-5 sm:px-10 lg:px-20">
-          <h1 className="max-w-4xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-6xl">
+          <h1 className="b612-float-in max-w-[650px] text-[32px] font-bold leading-[1.2em] tracking-[-0.03em] text-white [font-family:'Helvetica_W01',Arial,sans-serif] sm:text-[38px]">
             {t.hero.title}
             <br />
             {t.hero.subtitle}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-white/90 sm:text-xl">{t.hero.description}</p>
+          <p className="b612-float-in mt-[19px] max-w-[650px] text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.hero.description}
+          </p>
           <Link
-            href="/register"
-            className="mt-10 rounded-sm bg-brand px-8 py-3 text-sm font-bold uppercase tracking-widest text-white transition hover:bg-brand-dark"
+            href="mailto:FF@B612timainc.com?subject=Quote%20from%20website"
+            className="b612-float-in b612-live-button mt-[20px] flex h-[45px] w-[160px] items-center justify-center rounded-[10px] bg-[#14AA3C] text-[16px] font-normal uppercase leading-[1.5em] tracking-normal text-white [font-family:'Helvetica_W01',Arial,sans-serif] hover:bg-[#14AA3C]"
           >
             {t.hero.cta}
           </Link>
@@ -38,55 +83,49 @@ export function HomeContent() {
       </section>
 
       {/* ── About / Fulfillment ── */}
-      <section id="about" className="bg-white px-5 py-10 sm:px-10 lg:px-20">
-        <div className="grid items-stretch overflow-hidden rounded-md bg-panel lg:grid-cols-2">
-          <div className="flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-20 lg:py-20">
-            <h3 className="text-sm font-bold uppercase tracking-wide text-brand">{t.about.tag}</h3>
-            <h2 className="mt-4 whitespace-pre-line text-3xl font-bold leading-snug text-ink sm:text-4xl">
+      <section id="about" className="bg-white py-[50px]">
+        <div className="b612-about-shell mx-auto grid items-stretch bg-[#F5F5F5] lg:grid-cols-2">
+          <div className="b612-about-content flex flex-col justify-start">
+            <h3 className="b612-float-in text-[20px] font-bold leading-[1.4em] text-[#14AA3C] [font-family:'Helvetica_W01',Arial,sans-serif]">
+              {t.about.tag}
+            </h3>
+            <h2 className="b612-float-in mt-5 whitespace-pre-line text-[32px] font-bold leading-[1.2em] tracking-[-0.03em] text-black [font-family:'Helvetica_W01',Arial,sans-serif] sm:text-[38px]">
               {t.about.title}
             </h2>
-            <p className="mt-6 text-sm leading-relaxed text-body">{t.about.description}</p>
-            <div className="mt-8">
+            <p className="b612-float-in mt-5 max-w-[400px] text-[16px] font-normal leading-[1.6em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+              {t.about.description}
+            </p>
+            <div className="b612-float-in mt-5">
               <Link
-                href="/catalog"
-                className="inline-block rounded-full bg-brand px-7 py-3 text-sm font-bold tracking-wide text-white transition hover:bg-brand-dark"
+                href="/about"
+                className="b612-live-button flex h-[45px] w-[160px] items-center justify-center rounded-[10px] bg-[#14AA3C] text-[16px] font-normal leading-[1.5em] tracking-normal text-white [font-family:'Helvetica_W01',Arial,sans-serif] hover:bg-[#14AA3C]"
               >
                 {t.about.cta}
               </Link>
             </div>
           </div>
-          <div className="relative min-h-[400px] lg:min-h-0">
-            <Image src="/container-yard.jpg" alt="Container yard" fill className="object-cover" />
+          <div className="relative min-h-[450px] lg:min-h-0">
+            <Image
+              src="/about-container-yard.jpg"
+              alt="Container Yard_edited.jpg"
+              fill
+              sizes="(min-width: 1024px) 490px, calc(100vw - 40px)"
+              className="object-cover object-center"
+            />
           </div>
         </div>
       </section>
 
       {/* ── Service Categories (3-column text) ── */}
-      <section className="bg-white py-20">
-        <div className="mx-auto grid max-w-5xl gap-10 px-5 sm:grid-cols-3 sm:gap-16 sm:px-10 lg:px-20">
-          {(["threepl", "transport", "overseas"] as const).map((key, idx) => (
-            <div key={key} className="flex flex-col items-center">
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-brand/10">
-                {idx === 0 && (
-                  <svg className="h-7 w-7 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                  </svg>
-                )}
-                {idx === 1 && (
-                  <svg className="h-7 w-7 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-                  </svg>
-                )}
-                {idx === 2 && (
-                  <svg className="h-7 w-7 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
-                  </svg>
-                )}
-              </div>
-              <h3 className="text-center text-base font-bold text-ink">
+      <section className="bg-white py-[50px]">
+        <div className="b612-services-strip mx-auto grid bg-[#F5F5F5] sm:grid-cols-3">
+          {(["threepl", "transport", "overseas"] as const).map((key) => (
+            <div key={key} className="px-6 pb-[50px] pt-[50px] sm:w-full">
+              <ServiceCategoryIcon type={key} />
+              <h3 className="b612-float-up mt-5 text-[20px] font-bold leading-[1.4em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
                 {t.serviceCategories[key].title}
               </h3>
-              <ol className="mt-4 list-inside list-decimal space-y-2 text-left text-sm leading-relaxed text-body">
+              <ol className="b612-float-up mt-5 list-decimal space-y-0 pl-5 text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
                 {t.serviceCategories[key].items.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
@@ -97,25 +136,34 @@ export function HomeContent() {
       </section>
 
       {/* ── Warehouse Advantage (image bg) ── */}
-      <section className="relative">
-        <Image src="/warehouse.jpg" alt="Warehouse interior" fill className="object-cover" />
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-3xl px-5 py-10 sm:px-10 lg:px-20 lg:py-16">
-          <h2 className="whitespace-pre-line text-3xl font-bold text-white sm:text-4xl">
+      <section className="relative min-h-[618px] overflow-hidden bg-black">
+        <Image
+          src="/warehouse-advantage.jpg"
+          alt="Image by Jacques Dillies"
+          fill
+          sizes="100vw"
+          className="object-cover object-center opacity-70"
+        />
+        <div className="relative z-10 px-5 pb-[50px] pt-[52px] sm:px-10 lg:px-20">
+          <h2 className="b612-float-in max-w-[650px] whitespace-pre-line text-[32px] font-bold leading-[1.2em] tracking-[-0.03em] text-white [font-family:'Helvetica_W01',Arial,sans-serif] sm:text-[38px]">
             {t.advantage.title}
           </h2>
-          <div className="mt-10 space-y-6">
+          <div className="mt-5 space-y-5">
             {(["flexibility", "logistics", "customerService"] as const).map((key) => (
-              <div key={key}>
-                <h3 className="text-base font-bold text-white">{t.advantage[key].title}</h3>
-                <p className="mt-1 text-sm leading-relaxed text-white/80">{t.advantage[key].description}</p>
+              <div key={key} className="b612-float-in">
+                <h3 className="text-[20px] font-bold leading-[1.4em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+                  {t.advantage[key].title}
+                </h3>
+                <p className="max-w-[900px] text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+                  {t.advantage[key].description}
+                </p>
               </div>
             ))}
           </div>
-          <div className="mt-10">
+          <div className="b612-float-in mt-5">
             <Link
-              href="/register"
-              className="inline-block rounded-full bg-brand px-7 py-3 text-sm font-bold uppercase tracking-widest text-white transition hover:bg-brand-dark"
+              href="mailto:FF@B612timainc.com?subject=Quote%20from%20website"
+              className="b612-live-button flex h-[45px] w-[160px] items-center justify-center rounded-[10px] bg-[#14AA3C] text-[16px] font-normal uppercase leading-[1.5em] tracking-normal text-white [font-family:'Helvetica_W01',Arial,sans-serif] hover:bg-[#14AA3C]"
             >
               {t.hero.cta}
             </Link>
@@ -123,58 +171,69 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* ── Our Services (image cards) ── */}
-      <section id="services" className="bg-white py-20">
-        <div className="px-5 sm:px-10 lg:px-20">
-          <h2 className="text-center text-2xl font-bold text-ink sm:text-3xl">{t.ourServices.title}</h2>
-          <div className="mt-8 grid gap-6 sm:mt-12 sm:grid-cols-2">
-            {[
-              { src: "/dropshipping.jpg", alt: "Dropshipping" },
-              { src: "/warehousing-service.jpg", alt: "Warehousing" },
-              { src: "/trucking.jpg", alt: "OTR Trucking" },
-              { src: "/drayage.jpg", alt: "Drayage" },
-            ].map((img, i) => (
-              <div
-                key={i}
-                className="group overflow-hidden rounded-md bg-white shadow-sm transition hover:shadow-lg"
-              >
+      {/* ── Our Services (image gallery) ── */}
+      <section id="services" className="bg-white">
+        <div className="b612-services-strip mx-auto">
+          <h2 className="my-[50px] max-w-[907px] text-left text-[38px] font-bold leading-[1.2em] tracking-[-0.03em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.ourServices.title}
+          </h2>
+          <div className="grid gap-x-5 gap-y-5 pb-[50px] sm:grid-cols-2">
+            {serviceImages.map((img, i) => (
+              <article key={img.src} className="bg-white">
                 <div className="relative aspect-[4/3] w-full overflow-hidden">
                   <Image
                     src={img.src}
                     alt={img.alt}
                     fill
-                    className="object-cover transition duration-300 group-hover:scale-105"
+                    sizes="(min-width: 1024px) 480px, calc(100vw - 40px)"
+                    className="object-cover object-center"
                   />
                 </div>
-                <div className="p-5">
-                  <h3 className="text-lg font-bold text-ink">{t.ourServices.cards[i].title}</h3>
-                  <p className="mt-1 text-sm text-body">{t.ourServices.cards[i].subtitle}</p>
-                  <button className="mt-3 text-sm font-semibold text-brand transition hover:text-brand-dark">
+                <div className="min-h-[213px] pt-[15px]">
+                  <h3 className="text-[20px] font-bold leading-[25px] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                    {t.ourServices.cards[i].title}
+                  </h3>
+                  <p className="mb-4 mt-[6px] text-[15px] font-normal leading-[18px] text-[#747474] [font-family:'Avenir_LT_W01',Arial,sans-serif]">
+                    {t.ourServices.cards[i].subtitle}
+                  </p>
+                  <button
+                    type="button"
+                    className="flex h-[45px] w-[190px] items-center justify-center rounded-[10px] bg-[#14AA3C] text-[15px] font-bold leading-[18px] text-white transition-colors duration-200 [font-family:'Helvetica_W01',Arial,sans-serif] hover:bg-[#2DBE55]"
+                  >
                     {t.ourServices.learnMore}
                   </button>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── Client Testimonials ── */}
-      <section id="contact" className="relative py-20">
-        <Image src="/moving.jpg" alt="Testimonials background" fill className="object-cover" />
-        <div className="absolute inset-0 bg-black/55" />
-        <div className="relative z-10 px-5 sm:px-10 lg:px-20">
-          <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">{t.testimonials.title}</h2>
-          <div className="mt-12 grid gap-10 sm:grid-cols-3">
+      <section id="contact" className="relative min-h-[551px] overflow-hidden bg-black">
+        <Image
+          src="/testimonials-bg-live.jpg"
+          alt="搬入新屋"
+          fill
+          sizes="100vw"
+          className="object-cover object-center opacity-80"
+        />
+        <div className="relative z-10">
+          <div className="b612-services-strip mx-auto pt-[99px]">
+            <h2 className="b612-float-up mb-[50px] mx-[10px] text-center text-[38px] font-bold leading-[1.2em] tracking-[-0.03em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+              {t.testimonials.title}
+            </h2>
+          </div>
+          <div className="b612-services-strip mx-auto grid pb-[10px] sm:grid-cols-3">
             {t.testimonials.items.map((item, i) => (
               <div key={i} className="flex flex-col items-center text-center">
-                <svg className="mb-4 h-10 w-10 text-brand" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z" />
-                </svg>
-                <p className="text-sm italic leading-relaxed text-white/90">&ldquo;{item.quote}&rdquo;</p>
-                <div className="mt-6">
-                  <p className="text-sm font-bold text-white">{item.name} {item.role}</p>
-                </div>
+                <TestimonialQuoteIcon />
+                <p className="b612-float-up mx-[10px] mt-[35px] max-w-[307px] text-center text-[16px] font-normal leading-[1.88em] tracking-normal text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+                  {`"${item.quote}"`}
+                </p>
+                <p className="b612-float-up mx-[10px] mt-9 max-w-[307px] text-center text-[14px] font-bold leading-[1.67em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+                  {`${item.name}, ${item.role}`}
+                </p>
               </div>
             ))}
           </div>
