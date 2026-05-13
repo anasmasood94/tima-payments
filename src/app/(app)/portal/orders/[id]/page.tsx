@@ -102,9 +102,6 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
 
   return (
     <div className="space-y-6">
-      <Link href="/portal" className="text-sm text-body underline">
-        ← My account
-      </Link>
       <div>
         <h1 className="text-2xl font-semibold text-ink">Order</h1>
         <p className="mt-1 text-sm text-body">

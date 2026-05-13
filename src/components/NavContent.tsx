@@ -14,49 +14,84 @@ const navLinks = [
   { href: "/home", key: "home" as const },
   { href: "/about", key: "aboutUs" as const },
   { href: "/services", key: "services" as const },
-  { href: "/home#contact", key: "contact" as const },
+  { href: "/contact", key: "contact" as const },
+];
+
+const adminSubLinks = [
+  { href: "/admin", key: "adminDashboard" as const },
+  { href: "/admin/orders", key: "adminOrders" as const },
+  { href: "/admin/products", key: "adminProducts" as const },
+  { href: "/admin/invoices", key: "adminInvoices" as const },
+  { href: "/admin/customers", key: "adminCustomers" as const },
+  { href: "/admin/payments", key: "adminPayments" as const },
 ];
 
 export function NavContent({ session }: Props) {
   const { t } = useTranslation();
   const pathname = usePathname();
-
   return (
-    <header className="bg-white">
+    <header className={`bg-white ${session ? "border-b border-line shadow-sm" : ""}`}>
       <div className="flex items-center px-20 py-5">
         <Link href="/home" className="shrink-0 text-2xl font-bold tracking-tight text-ink">
           B612 Tima Inc.
         </Link>
 
         <nav className="ml-10 flex flex-1 items-center gap-10 text-[15px]">
-          {navLinks.map((link) => {
-            const isActive =
-              link.href === "/home"
-                ? pathname === "/home"
-                : pathname.startsWith(link.href.split("#")[0]);
-            return (
+          {!session &&
+            navLinks.map((link) => {
+              const isActive =
+                link.href === "/home"
+                  ? pathname === "/home"
+                  : pathname.startsWith(link.href.split("#")[0]);
+              return (
+                <Link
+                  key={link.key}
+                  href={link.href}
+                  className={`transition-colors hover:text-ink ${isActive ? "text-muted" : "text-ink font-medium"}`}
+                >
+                  {t.nav[link.key]}
+                </Link>
+              );
+            })}
+
+          {session && session.role !== "ADMIN" && (
+            <>
               <Link
-                key={link.key}
-                href={link.href}
-                className={`transition-colors hover:text-ink ${isActive ? "text-muted" : "text-ink font-medium"}`}
+                href="/catalog"
+                className={`transition-colors hover:text-ink ${pathname.startsWith("/catalog") ? "text-muted" : "text-ink font-medium"}`}
               >
-                {t.nav[link.key]}
+                {t.nav.services}
               </Link>
-            );
-          })}
+              <Link
+                href="/portal"
+                className={`transition-colors hover:text-ink ${pathname.startsWith("/portal") ? "text-muted" : "text-ink font-medium"}`}
+              >
+                {t.nav.myAccount}
+              </Link>
+            </>
+          )}
+
+          {session && session.role === "ADMIN" &&
+            adminSubLinks.map((link) => {
+              const isActive = link.href === "/admin"
+                ? pathname === "/admin"
+                : pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.key}
+                  href={link.href}
+                  className={`transition-colors hover:text-ink ${isActive ? "text-muted" : "text-ink font-medium"}`}
+                >
+                  {t.nav[link.key]}
+                </Link>
+              );
+            })}
         </nav>
 
         <div className="flex shrink-0 items-center gap-4">
           {session ? (
             <>
-              {session.role === "ADMIN" ? (
-                <Link href="/admin" className="text-[15px] text-muted transition-colors hover:text-ink">
-                  {t.nav.admin}
-                </Link>
-              ) : null}
-              <Link href="/portal" className="text-[15px] text-muted transition-colors hover:text-ink">
-                {t.nav.myAccount}
-              </Link>
+
               <form action={logoutAction}>
                 <button
                   type="submit"

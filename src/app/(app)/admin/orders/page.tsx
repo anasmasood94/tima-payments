@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { orderStatusLabel } from "@/lib/order-status";
+import { OrdersTable } from "./orders-table";
 
 export const metadata = { title: "Orders" };
 
@@ -15,51 +15,26 @@ export default async function AdminOrdersPage() {
     redirect("/portal");
   }
 
-  const orders = await prisma.order.findMany({
+  const raw = await prisma.order.findMany({
     orderBy: { createdAt: "desc" },
-    take: 50,
     include: { user: true, lines: true },
   });
+
+  const orders = raw.map((o) => ({
+    id: o.id,
+    createdAt: o.createdAt.toLocaleString(),
+    status: orderStatusLabel(o.status),
+    userName: o.user.name,
+    userEmail: o.user.email,
+    lineCount: o.lines.length,
+  }));
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-2xl font-semibold text-ink">Orders</h1>
-        <Link href="/admin" className="text-sm text-body underline">
-          ← Admin
-        </Link>
       </div>
-      <div className="overflow-hidden rounded-xl border border-line bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-panel text-xs uppercase text-body">
-            <tr>
-              <th className="px-4 py-2">When</th>
-              <th className="px-4 py-2">Customer</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Lines</th>
-              <th className="px-4 py-2" />
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {orders.map((o) => (
-              <tr key={o.id}>
-                <td className="px-4 py-2 text-body">{o.createdAt.toLocaleString()}</td>
-                <td className="px-4 py-2">
-                  <p className="font-medium text-ink">{o.user.name}</p>
-                  <p className="text-xs text-muted">{o.user.email}</p>
-                </td>
-                <td className="px-4 py-2">{orderStatusLabel(o.status)}</td>
-                <td className="px-4 py-2">{o.lines.length}</td>
-                <td className="px-4 py-2 text-right">
-                  <Link href={`/admin/orders/${o.id}`} className="font-medium text-ink underline">
-                    Open
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <OrdersTable orders={orders} />
     </div>
   );
 }

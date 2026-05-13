@@ -19,6 +19,17 @@ enum ProductKind {
   SERVICE
 }
 
+enum ServiceCategory {
+  DROPSHIPPING
+  WAREHOUSING
+  OTR_TRUCKING
+  DRAYAGE
+  UPS_HUB_DIRECT
+  DISCOUNTED_SHIPPING
+  SHIPMENT_BOOKING
+  CUSTOMS_SERVICE
+}
+
 enum OrderStatus {
   DRAFT
   PLACED
@@ -68,19 +79,24 @@ model User {
 }
 
 model Product {
-  id          String      @id @default(cuid())
-  slug        String      @unique
+  id          String           @id @default(cuid())
+  slug        String           @unique
   name        String
   description String
-  sku         String      @unique
+  sku         String           @unique
   priceCents  Int
-  currency    String      @default("USD")
-  active      Boolean     @default(true)
-  kind        ProductKind @default(PRODUCT)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  currency    String           @default("USD")
+  active      Boolean          @default(true)
+  kind        ProductKind      @default(PRODUCT)
+  category    ServiceCategory?
+  imageUrl    String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   lines OrderLine[]
+
+  @@index([category])
+  @@index([name])
 }
 
 model Order {

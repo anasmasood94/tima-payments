@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { ProductKind } from "@prisma/client";
 import { AdminModal } from "@/components/admin-modal";
 import { formatUsd } from "@/lib/format";
 import { deactivateProductFormAction } from "@/actions/admin-products";
+import { useSearchPagination, SearchBar, Pagination } from "@/components/admin-list-controls";
 import { ProductForm } from "./product-form";
 
 export type ProductRow = {
@@ -41,6 +42,16 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
 
   const editing = useMemo(() => products.find((p) => p.id === editId) ?? null, [products, editId]);
 
+  const searchFn = useCallback(
+    (p: ProductRow, q: string) =>
+      p.name.toLowerCase().includes(q) ||
+      p.sku.toLowerCase().includes(q),
+    [],
+  );
+
+  const { query, setQuery, page, setPage, totalPages, paginated, showPagination } =
+    useSearchPagination(products, searchFn);
+
   return (
     <div className="space-y-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -59,10 +70,11 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
           >
             Create product
           </button>
-          <Link href="/admin" className="text-sm text-body underline">
-            ← Admin
-          </Link>
         </div>
+      </div>
+
+      <div className="max-w-sm">
+        <SearchBar value={query} onChange={setQuery} placeholder="Search by name or SKU…" />
       </div>
 
       <section className="overflow-hidden rounded-xl border border-line bg-white">
@@ -77,7 +89,7 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {products.map((p) => (
+            {paginated.map((p) => (
               <tr key={p.id}>
                 <td className="px-4 py-2 font-medium text-ink">{p.name}</td>
                 <td className="px-4 py-2 text-body">{p.sku}</td>
@@ -107,9 +119,20 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
                 </td>
               </tr>
             ))}
+            {paginated.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-4 py-6 text-center text-sm text-muted">
+                  No products found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </section>
+
+      {showPagination && (
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      )}
 
       <AdminModal open={createOpen} onClose={() => setCreateOpen(false)} title="Create product">
         <ProductForm submitLabel="Create" key="create-modal" />

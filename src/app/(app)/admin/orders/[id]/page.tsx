@@ -39,9 +39,6 @@ export default async function AdminOrderDetailPage({ params, searchParams }: Pro
 
   return (
     <div className="space-y-8">
-      <Link href="/admin/orders" className="text-sm text-body underline">
-        ← Orders
-      </Link>
       {sp.issued ? (
         <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
           Invoice issued.

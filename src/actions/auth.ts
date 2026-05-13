@@ -50,7 +50,7 @@ export async function registerAction(_prev: unknown, formData: FormData) {
     role: user.role,
   });
   await setSessionCookie(token);
-  redirect("/portal");
+  redirect("/catalog");
 }
 
 const loginSchema = z.object({
@@ -90,7 +90,7 @@ export async function loginAction(_prev: unknown, formData: FormData) {
     redirect(next);
   }
 
-  redirect(user.role === "ADMIN" ? "/admin" : "/portal");
+  redirect(user.role === "ADMIN" ? "/admin" : "/catalog");
 }
 
 export async function logoutAction() {

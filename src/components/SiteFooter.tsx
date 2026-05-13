@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/language-context";
 
-export function SiteFooter() {
+export function SiteFooter({ loggedIn }: { loggedIn?: boolean }) {
   const { t } = useTranslation();
 
   return (
-    <footer className="mt-auto bg-white text-neutral-600">
+    <footer className={`mt-auto bg-white text-neutral-600 ${loggedIn ? "border-t border-line" : ""}`}>
       <div className="grid gap-10 px-20 py-14 sm:grid-cols-2 lg:grid-cols-4">
         {/* Brand + Business Hours */}
         <div>
@@ -33,7 +33,7 @@ export function SiteFooter() {
               <Link href="/services" className="transition-colors hover:text-ink">{t.nav.services}</Link>
             </li>
             <li>
-              <Link href="/home#contact" className="transition-colors hover:text-ink">{t.nav.contact}</Link>
+              <Link href="/contact" className="transition-colors hover:text-ink">{t.nav.contact}</Link>
             </li>
           </ul>
         </div>

@@ -1,17 +1,11 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { InvoiceStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { formatUsd } from "@/lib/format";
 import { orderStatusLabel } from "@/lib/order-status";
-import {
-  PortalHeading,
-  PortalSectionTitle,
-  PortalEmptyText,
-  PortalViewLink,
-  PortalOpenLink,
-} from "./portal-heading";
+import { PortalHeading } from "./portal-heading";
+import { PortalOrdersList, PortalInvoicesList } from "./portal-lists";
 
 export const metadata = { title: "My account" };
 
@@ -26,11 +20,10 @@ export default async function PortalHomePage({
   }
   const sp = await searchParams;
 
-  const [orders, invoices] = await Promise.all([
+  const [rawOrders, rawInvoices] = await Promise.all([
     prisma.order.findMany({
       where: { userId: session.sub },
       orderBy: { createdAt: "desc" },
-      take: 8,
       include: { lines: { include: { product: true } }, invoices: true },
     }),
     prisma.invoice.findMany({
@@ -39,10 +32,23 @@ export default async function PortalHomePage({
         status: { in: [InvoiceStatus.ISSUED, InvoiceStatus.VOID] },
       },
       orderBy: { createdAt: "desc" },
-      take: 8,
       include: { order: true },
     }),
   ]);
+
+  const orders = rawOrders.map((o) => ({
+    id: o.id,
+    status: orderStatusLabel(o.status),
+    lineCount: o.lines.length,
+    createdAt: new Date(o.createdAt).toLocaleDateString(),
+  }));
+
+  const invoices = rawInvoices.map((inv) => ({
+    id: inv.id,
+    number: inv.number,
+    amount: formatUsd(inv.amountCents),
+    status: inv.status,
+  }));
 
   return (
     <div className="space-y-10">
@@ -61,51 +67,8 @@ export default async function PortalHomePage({
         {sp.paid ? <p className="mt-2 text-sm text-emerald-700">Thank you — payment recorded.</p> : null}
       </div>
 
-      <section className="space-y-3">
-        <PortalSectionTitle section="recentOrders" />
-        {orders.length === 0 ? (
-          <PortalEmptyText type="orders" />
-        ) : (
-          <ul className="divide-y divide-line rounded-lg border border-line bg-white">
-            {orders.map((o) => (
-              <li key={o.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
-                <div>
-                  <p className="font-medium text-ink">{orderStatusLabel(o.status)}</p>
-                  <p className="text-xs text-muted">
-                    {o.lines.length} line(s) · {new Date(o.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <Link href={`/portal/orders/${o.id}`} className="text-sm font-medium text-ink underline">
-                  <PortalViewLink />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section className="space-y-3">
-        <PortalSectionTitle section="invoices" />
-        {invoices.length === 0 ? (
-          <PortalEmptyText type="invoices" />
-        ) : (
-          <ul className="divide-y divide-line rounded-lg border border-line bg-white">
-            {invoices.map((inv) => (
-              <li key={inv.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
-                <div>
-                  <p className="font-medium text-ink">{inv.number}</p>
-                  <p className="text-xs text-muted">
-                    {formatUsd(inv.amountCents)} · {inv.status}
-                  </p>
-                </div>
-                <Link href={`/portal/invoices/${inv.id}`} className="text-sm font-medium text-ink underline">
-                  <PortalOpenLink />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <PortalOrdersList orders={orders} />
+      <PortalInvoicesList invoices={invoices} />
     </div>
   );
 }
