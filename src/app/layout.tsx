@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Libre_Baskerville, Montserrat } from "next/font/google";
+import { Montserrat } from "next/font/google";
+import { LanguageProvider } from "@/lib/i18n/language-context";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -8,19 +9,12 @@ const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
 });
 
-const libre = Libre_Baskerville({
-  variable: "--font-libre",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-});
-
 export const metadata: Metadata = {
   title: {
-    default: "Tima — Warehouse services",
-    template: "%s · Tima",
+    default: "B612 Tima Inc. — Warehouse Services",
+    template: "%s · B612 Tima Inc.",
   },
-  description: "Warehouse services, orders, invoices, and provider-hosted payments.",
+  description: "Warehouse services, orders, invoices, and provider-hosted payments by B612 Tima Inc.",
 };
 
 export default function RootLayout({
@@ -31,9 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} ${libre.variable} font-sans min-h-screen bg-white text-body antialiased`}
+        className={`${montserrat.variable} font-sans min-h-screen bg-white text-body antialiased`}
       >
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

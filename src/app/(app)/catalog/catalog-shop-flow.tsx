@@ -165,14 +165,14 @@ export function CatalogShopFlow({
                   <li
                     key={p.id}
                     className={`flex flex-col rounded-xl border bg-white p-5 shadow-sm transition-colors ${
-                      q > 0 ? "border-brick ring-1 ring-brick/15" : "border-line"
+                      q > 0 ? "border-brand ring-1 ring-brand/15" : "border-line"
                     }`}
                   >
                     <div className="flex flex-1 flex-col gap-2">
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-xs font-medium uppercase tracking-wide text-muted">{p.kind}</p>
                         {q > 0 ? (
-                          <span className="rounded-full bg-brick px-2 py-0.5 text-xs font-medium text-white">
+                          <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-medium text-white">
                             In cart
                           </span>
                         ) : null}
@@ -306,7 +306,7 @@ export function CatalogShopFlow({
                 value="order"
                 aria-disabled={!canSubmit}
                 className={`rounded-md px-4 py-2.5 text-sm font-medium text-white sm:flex-1 ${
-                  canSubmit ? "bg-brick hover:bg-brick/90" : "cursor-not-allowed bg-line text-muted"
+                  canSubmit ? "bg-brand hover:bg-brand-dark" : "cursor-not-allowed bg-line text-muted"
                 }`}
               >
                 {isPending ? "Submitting…" : "Place order"}
@@ -347,7 +347,7 @@ export function CatalogShopFlow({
                 value="order"
                 aria-disabled={!canSubmit}
                 className={`flex-1 rounded-md py-2.5 text-sm font-medium text-white ${
-                  canSubmit ? "bg-brick hover:bg-brick/90" : "cursor-not-allowed bg-line text-muted"
+                  canSubmit ? "bg-brand hover:bg-brand-dark" : "cursor-not-allowed bg-line text-muted"
                 }`}
               >
                 {isPending ? "…" : "Place order"}

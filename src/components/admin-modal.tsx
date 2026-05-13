@@ -30,7 +30,7 @@ export function AdminModal({ open, title, onClose, children }: AdminModalProps) 
   return (
     <dialog
       ref={ref}
-      className="m-0 max-h-none max-w-none border-0 bg-transparent p-0 shadow-none outline-none [&::backdrop]:bg-brick/40"
+      className="m-0 max-h-none max-w-none border-0 bg-transparent p-0 shadow-none outline-none [&::backdrop]:bg-brand/40"
       onClose={onClose}
     >
       <div

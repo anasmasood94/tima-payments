@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-/** Palette aligned with Ark / Coderkubes login (Montserrat + brick accent). */
+/** Palette aligned with B612 Tima Inc (b612ff.com). */
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
@@ -12,18 +12,20 @@ const config: Config = {
         line: "#DFDFDF",
         panel: "#F5F5F5",
         decorative: "#D9D9D9",
-        brick: {
-          DEFAULT: "#C04657",
-          10: "rgba(192, 70, 87, 0.1)",
-          15: "rgba(192, 70, 87, 0.15)",
-          20: "rgba(192, 70, 87, 0.2)",
+        brand: {
+          DEFAULT: "#43A047",
+          dark: "#2E7D32",
+          light: "#66BB6A",
+          10: "rgba(67, 160, 71, 0.1)",
+          15: "rgba(67, 160, 71, 0.15)",
+          20: "rgba(67, 160, 71, 0.2)",
         },
-        link: "#3B82F6",
+        link: "#43A047",
         danger: "#E53E3E",
       },
       fontFamily: {
         sans: ["var(--font-montserrat)", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["var(--font-libre)", "ui-serif", "Georgia", "serif"],
+        display: ["var(--font-montserrat)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       boxShadow: {
         ark: "0 0.21875rem 0.34375rem 0 rgba(0, 0, 0, 0.02)",

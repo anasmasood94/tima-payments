@@ -34,7 +34,7 @@ export function IssueInvoiceForm({ orderId, computedSubtotalCents }: Props) {
       </label>
       <button
         type="submit"
-        className="rounded-md bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90"
+        className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark"
       >
         Issue invoice
       </button>

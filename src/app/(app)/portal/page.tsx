@@ -5,6 +5,13 @@ import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { formatUsd } from "@/lib/format";
 import { orderStatusLabel } from "@/lib/order-status";
+import {
+  PortalHeading,
+  PortalSectionTitle,
+  PortalEmptyText,
+  PortalViewLink,
+  PortalOpenLink,
+} from "./portal-heading";
 
 export const metadata = { title: "My account" };
 
@@ -40,7 +47,7 @@ export default async function PortalHomePage({
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-semibold text-ink">My account</h1>
+        <PortalHeading />
         {sp.created ? (
           <div className="mt-2 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950">
             <p className="font-medium text-emerald-900">Your request was submitted.</p>
@@ -55,9 +62,9 @@ export default async function PortalHomePage({
       </div>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-ink">Recent orders</h2>
+        <PortalSectionTitle section="recentOrders" />
         {orders.length === 0 ? (
-          <p className="text-sm text-body">No orders yet. Start from the catalog.</p>
+          <PortalEmptyText type="orders" />
         ) : (
           <ul className="divide-y divide-line rounded-lg border border-line bg-white">
             {orders.map((o) => (
@@ -69,7 +76,7 @@ export default async function PortalHomePage({
                   </p>
                 </div>
                 <Link href={`/portal/orders/${o.id}`} className="text-sm font-medium text-ink underline">
-                  View
+                  <PortalViewLink />
                 </Link>
               </li>
             ))}
@@ -78,9 +85,9 @@ export default async function PortalHomePage({
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-ink">Invoices</h2>
+        <PortalSectionTitle section="invoices" />
         {invoices.length === 0 ? (
-          <p className="text-sm text-body">No invoices yet.</p>
+          <PortalEmptyText type="invoices" />
         ) : (
           <ul className="divide-y divide-line rounded-lg border border-line bg-white">
             {invoices.map((inv) => (
@@ -92,7 +99,7 @@ export default async function PortalHomePage({
                   </p>
                 </div>
                 <Link href={`/portal/invoices/${inv.id}`} className="text-sm font-medium text-ink underline">
-                  Open
+                  <PortalOpenLink />
                 </Link>
               </li>
             ))}

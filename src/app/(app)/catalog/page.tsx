@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { CATALOG_PAGE_SIZE } from "./catalog-constants";
 import { CatalogShopFlow } from "./catalog-shop-flow";
+import { CatalogHeader } from "./catalog-header";
 
 export const metadata = {
   title: "Catalog",
@@ -51,18 +51,7 @@ export default async function CatalogPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-10">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-ink">Services &amp; products</h1>
-          <p className="mt-2 max-w-2xl text-sm text-body">
-            Pick quantities below, then place an order or request a quote. Payment always happens on your payment
-            provider&apos;s hosted pages after we issue an invoice — never by entering a card here.
-          </p>
-        </div>
-        <Link href="/portal" className="text-sm font-medium text-body underline">
-          My account
-        </Link>
-      </div>
+      <CatalogHeader />
 
       <CatalogShopFlow
         products={products}

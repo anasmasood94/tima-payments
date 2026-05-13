@@ -140,7 +140,7 @@ export default async function PortalOrderDetailPage({ params, searchParams }: Pr
       <AirwallexOrderPaymentPoller orderId={order.id} enabled={pollAirwallex} />
 
       {order.status === OrderStatus.PLACED && pendingPayment?.hostedCheckoutUrl ? (
-        <div className="rounded-xl border border-brick/30 bg-brick p-5 text-white shadow-sm">
+        <div className="rounded-xl border border-brand/30 bg-brand p-5 text-white shadow-sm">
           <p className="text-sm font-medium uppercase tracking-wide text-white/75">Checkout</p>
           <p className="mt-1 text-lg font-semibold">Pay {formatUsd(pendingPayment.amountCents)} to confirm this order</p>
           <p className="mt-2 text-sm text-white/80">

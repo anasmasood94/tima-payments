@@ -33,12 +33,12 @@ export function CatalogPagination({ page, totalPages, totalItems }: Props) {
         {page > 1 ? (
           <Link
             href={`/catalog?page=${page - 1}#shop`}
-            className="rounded-ark border border-line bg-white px-3 py-1.5 text-sm font-medium text-body shadow-ark hover:bg-panel"
+            className="rounded-md border border-line bg-white px-3 py-1.5 text-sm font-medium text-body shadow-sm hover:bg-panel"
           >
             Previous
           </Link>
         ) : (
-          <span className="rounded-ark border border-transparent px-3 py-1.5 text-sm font-medium text-muted/50">
+          <span className="rounded-md border border-transparent px-3 py-1.5 text-sm font-medium text-muted/50">
             Previous
           </span>
         )}
@@ -48,12 +48,12 @@ export function CatalogPagination({ page, totalPages, totalItems }: Props) {
         {page < totalPages ? (
           <Link
             href={`/catalog?page=${page + 1}#shop`}
-            className="rounded-ark border border-line bg-white px-3 py-1.5 text-sm font-medium text-body shadow-ark hover:bg-panel"
+            className="rounded-md border border-line bg-white px-3 py-1.5 text-sm font-medium text-body shadow-sm hover:bg-panel"
           >
             Next
           </Link>
         ) : (
-          <span className="rounded-ark border border-transparent px-3 py-1.5 text-sm font-medium text-muted/50">
+          <span className="rounded-md border border-transparent px-3 py-1.5 text-sm font-medium text-muted/50">
             Next
           </span>
         )}

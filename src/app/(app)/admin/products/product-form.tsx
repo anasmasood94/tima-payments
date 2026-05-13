@@ -67,7 +67,7 @@ export function ProductForm({ submitLabel, initial }: Props) {
         <input type="checkbox" name="active" defaultChecked={initial?.active ?? true} />
         <span className="text-body">Active (visible in catalog)</span>
       </label>
-      <button type="submit" className="rounded-md bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90">
+      <button type="submit" className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark">
         {submitLabel}
       </button>
     </form>
