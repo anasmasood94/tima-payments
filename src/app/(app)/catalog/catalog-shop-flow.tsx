@@ -156,8 +156,6 @@ export function CatalogShopFlow({
         ))}
 
         <div className="min-w-0 space-y-6 lg:col-start-1">
-          <h2 className="text-lg font-semibold text-ink">{t.catalog.browseTitle}</h2>
-
           {products.length === 0 ? (
             <p className="text-sm text-body">{t.catalog.noProducts}</p>
           ) : (
@@ -168,29 +166,32 @@ export function CatalogShopFlow({
                 return (
                   <li
                     key={p.id}
-                    className={`flex flex-col rounded-xl border bg-white p-5 shadow-sm transition-colors ${
-                      q > 0 ? "border-brand ring-1 ring-brand/15" : "border-line"
+                    className={`flex flex-col rounded-xl border bg-white p-5 shadow-sm transition-all ${
+                      q > 0 ? "border-brand ring-1 ring-brand/15 shadow-brand/5" : "border-line hover:border-brand/30 hover:shadow-md"
                     }`}
                   >
                     <div className="flex flex-1 flex-col gap-2">
                       <div className="flex items-start justify-between gap-2">
-                        <p className="text-xs font-medium uppercase tracking-wide text-muted">{p.kind}</p>
+                        <span className="inline-flex items-center rounded-md bg-brand/10 px-2 py-0.5 text-xs font-medium text-brand-dark">{p.kind}</span>
                         {q > 0 ? (
-                          <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-medium text-white">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-0.5 text-xs font-medium text-white">
+                            <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
                             {t.catalog.inCart}
                           </span>
                         ) : null}
                       </div>
                       <h3 className="text-lg font-semibold text-ink">{p.name}</h3>
                       <p className="line-clamp-3 text-sm text-body">{p.description}</p>
-                      <p className="text-sm font-medium text-ink">{formatUsd(p.priceCents)} {t.catalog.each}</p>
+                      <p className="text-sm font-semibold text-brand-dark">{formatUsd(p.priceCents)} {t.catalog.each}</p>
                     </div>
 
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line/60 pt-4">
                       <div className="flex items-center gap-1">
                         <button
                           type="button"
-                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-line bg-white text-lg font-medium text-ink hover:bg-panel"
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-line bg-white text-lg font-medium text-ink transition-colors hover:border-brand/30 hover:bg-brand/5 hover:text-brand"
                           aria-label={`− ${p.name}`}
                           onClick={() => setQuantity(p.id, stepQty(q, -1))}
                         >
@@ -203,12 +204,12 @@ export function CatalogShopFlow({
                           inputMode="numeric"
                           value={q}
                           onChange={(e) => setQuantity(p.id, Number(e.target.value) || 0)}
-                          className="h-10 w-16 rounded-md border border-line bg-white px-2 text-center text-sm font-medium text-ink tabular-nums"
+                          className="h-10 w-16 rounded-md border border-line bg-white px-2 text-center text-sm font-medium text-ink tabular-nums focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand/30"
                           aria-label={p.name}
                         />
                         <button
                           type="button"
-                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-line bg-white text-lg font-medium text-ink hover:bg-panel"
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-line bg-white text-lg font-medium text-ink transition-colors hover:border-brand/30 hover:bg-brand/5 hover:text-brand"
                           aria-label={`+ ${p.name}`}
                           onClick={() => setQuantity(p.id, stepQty(q, 1))}
                         >
@@ -224,7 +225,7 @@ export function CatalogShopFlow({
                     <div className="mt-3 flex flex-wrap gap-2">
                       <button
                         type="button"
-                        className="text-xs font-medium text-body underline"
+                        className="text-xs font-medium text-brand underline transition-colors hover:text-brand-dark"
                         onClick={() => setQuantity(p.id, stepQty(q, 1))}
                       >
                         {t.catalog.addOne}
@@ -247,94 +248,108 @@ export function CatalogShopFlow({
           <CatalogPagination page={page} totalPages={totalPages} totalItems={totalItems} />
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:col-start-2 lg:row-start-1">
-          <div className="rounded-xl border border-line bg-white p-5 shadow-sm">
-            <h3 className="text-base font-semibold text-ink">{t.catalog.yourCart}</h3>
-            <p className="mt-1 text-xs text-muted">{t.catalog.cartReview}</p>
-
-            {lineCount === 0 ? (
-              <p className="mt-4 rounded-lg bg-panel px-3 py-6 text-center text-sm text-body">
-                {t.catalog.emptyCart} <strong>1</strong> {t.catalog.emptyCartSuffix}
-              </p>
-            ) : (
-              <ul className="mt-4 max-h-64 space-y-2 overflow-y-auto border-y border-line/60 py-3">
-                {lines.map(({ product, quantity, lineCents }) => (
-                  <li key={product.id} className="flex gap-2 text-sm">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium text-ink">{product.name}</p>
-                      <p className="text-xs text-muted">
-                        {formatUsd(product.priceCents)} × {quantity}
-                      </p>
-                    </div>
-                    <div className="shrink-0 text-right">
-                      <p className="font-medium text-ink">{formatUsd(lineCents)}</p>
-                      <button
-                        type="button"
-                        className="text-xs font-medium text-red-700 underline"
-                        onClick={() => setQuantity(product.id, 0)}
-                      >
-                        {t.catalog.remove}
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div className="mt-4 flex items-end justify-between gap-4 border-t border-line/60 pt-4">
-              <div>
-                <p className="text-xs font-medium uppercase text-muted">{t.catalog.estimatedSubtotal}</p>
-                <p className="mt-0.5 text-2xl font-semibold tabular-nums text-ink">{formatUsd(subtotalCents)}</p>
+        <aside className="lg:sticky lg:top-6 lg:col-start-2 lg:row-start-1">
+          <div className="overflow-hidden rounded-xl border border-line bg-white shadow-sm">
+            <div className="bg-gradient-to-r from-brand to-brand-dark px-5 py-4">
+              <div className="flex items-center gap-2">
+                <svg className="h-5 w-5 text-white/80" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                </svg>
+                <h3 className="text-base font-semibold text-white">{t.catalog.yourCart}</h3>
               </div>
-              <button
-                type="button"
-                className="text-sm font-medium text-body underline disabled:opacity-40"
-                disabled={lineCount === 0}
-                onClick={clearCart}
-              >
-                {t.catalog.clearCart}
-              </button>
+              <p className="mt-1 text-xs text-white/70">{t.catalog.cartReview}</p>
             </div>
 
-            <label className="mt-5 block text-sm">
-              <span className="text-body">{t.catalog.notesLabel}</span>
-              <textarea
-                name="notes"
-                rows={3}
-                className="mt-1 w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink"
-                placeholder={t.catalog.notesPlaceholder}
-              />
-            </label>
+            <div className="p-5">
+              {lineCount === 0 ? (
+                <div className="rounded-lg border border-dashed border-line bg-panel/50 px-3 py-6 text-center">
+                  <svg className="mx-auto h-8 w-8 text-muted/30" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                  </svg>
+                  <p className="mt-2 text-sm text-body">
+                    {t.catalog.emptyCart} <strong>1</strong> {t.catalog.emptyCartSuffix}
+                  </p>
+                </div>
+              ) : (
+                <ul className="max-h-64 space-y-2 overflow-y-auto border-b border-line/60 pb-3">
+                  {lines.map(({ product, quantity, lineCents }) => (
+                    <li key={product.id} className="flex gap-2 rounded-lg p-2 text-sm transition-colors hover:bg-brand/[0.03]">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-medium text-ink">{product.name}</p>
+                        <p className="text-xs text-muted">
+                          {formatUsd(product.priceCents)} × {quantity}
+                        </p>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <p className="font-medium text-ink">{formatUsd(lineCents)}</p>
+                        <button
+                          type="button"
+                          className="text-xs font-medium text-red-600 underline transition-colors hover:text-red-800"
+                          onClick={() => setQuantity(product.id, 0)}
+                        >
+                          {t.catalog.remove}
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="submit"
-                name="intent"
-                value="order"
-                aria-disabled={!canSubmit}
-                className={`rounded-md px-4 py-2.5 text-sm font-medium text-white sm:flex-1 ${
-                  canSubmit ? "bg-brand hover:bg-brand-dark" : "cursor-not-allowed bg-line text-muted"
-                }`}
-              >
-                {isPending ? t.catalog.submitting : t.catalog.placeOrder}
-              </button>
-              <button
-                type="submit"
-                name="intent"
-                value="quote"
-                aria-disabled={!canSubmit}
-                className={`rounded-md border px-4 py-2.5 text-sm font-medium sm:flex-1 ${
-                  canSubmit
-                    ? "border-line bg-white text-ink hover:bg-panel"
-                    : "cursor-not-allowed border-line bg-panel text-muted/70"
-                }`}
-              >
-                {isPending ? t.catalog.submitting : t.catalog.requestQuote}
-              </button>
+              <div className="mt-4 flex items-end justify-between gap-4 border-t border-line/60 pt-4">
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted">{t.catalog.estimatedSubtotal}</p>
+                  <p className="mt-0.5 text-2xl font-semibold tabular-nums text-ink">{formatUsd(subtotalCents)}</p>
+                </div>
+                <button
+                  type="button"
+                  className="text-sm font-medium text-body underline disabled:opacity-40"
+                  disabled={lineCount === 0}
+                  onClick={clearCart}
+                >
+                  {t.catalog.clearCart}
+                </button>
+              </div>
+
+              <label className="mt-5 block text-sm">
+                <span className="text-body">{t.catalog.notesLabel}</span>
+                <textarea
+                  name="notes"
+                  rows={3}
+                  className="mt-1 w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand/30"
+                  placeholder={t.catalog.notesPlaceholder}
+                />
+              </label>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="submit"
+                  name="intent"
+                  value="order"
+                  aria-disabled={!canSubmit}
+                  className={`rounded-md px-4 py-2.5 text-sm font-medium text-white transition-colors sm:flex-1 ${
+                    canSubmit ? "bg-brand shadow-sm shadow-brand/25 hover:bg-brand-dark" : "cursor-not-allowed bg-line text-muted"
+                  }`}
+                >
+                  {isPending ? t.catalog.submitting : t.catalog.placeOrder}
+                </button>
+                <button
+                  type="submit"
+                  name="intent"
+                  value="quote"
+                  aria-disabled={!canSubmit}
+                  className={`rounded-md border px-4 py-2.5 text-sm font-medium transition-colors sm:flex-1 ${
+                    canSubmit
+                      ? "border-brand/20 bg-white text-brand hover:bg-brand/5"
+                      : "cursor-not-allowed border-line bg-panel text-muted/70"
+                  }`}
+                >
+                  {isPending ? t.catalog.submitting : t.catalog.requestQuote}
+                </button>
+              </div>
+              {!canSubmit && lineCount === 0 ? (
+                <p className="mt-3 text-center text-xs text-muted">{t.catalog.addProductPrompt}</p>
+              ) : null}
             </div>
-            {!canSubmit && lineCount === 0 ? (
-              <p className="mt-3 text-center text-xs text-muted">{t.catalog.addProductPrompt}</p>
-            ) : null}
           </div>
         </aside>
 
@@ -353,7 +368,7 @@ export function CatalogShopFlow({
                 value="order"
                 aria-disabled={!canSubmit}
                 className={`flex-1 rounded-md py-2.5 text-sm font-medium text-white ${
-                  canSubmit ? "bg-brand hover:bg-brand-dark" : "cursor-not-allowed bg-line text-muted"
+                  canSubmit ? "bg-brand shadow-sm shadow-brand/25 hover:bg-brand-dark" : "cursor-not-allowed bg-line text-muted"
                 }`}
               >
                 {isPending ? "…" : t.catalog.placeOrder}
@@ -365,7 +380,7 @@ export function CatalogShopFlow({
                 aria-disabled={!canSubmit}
                 className={`flex-1 rounded-md border py-2.5 text-sm font-medium ${
                   canSubmit
-                    ? "border-line bg-white text-ink"
+                    ? "border-brand/20 bg-white text-brand"
                     : "cursor-not-allowed border-line bg-panel text-muted/70"
                 }`}
               >
@@ -383,8 +398,8 @@ export function CatalogShopFlow({
       >
         {descProduct ? (
           <div className="space-y-3">
-            <p className="text-xs font-medium uppercase text-muted">{descProduct.kind}</p>
-            <p className="text-sm font-medium text-ink">{formatUsd(descProduct.priceCents)} {t.catalog.each}</p>
+            <span className="inline-flex items-center rounded-md bg-brand/10 px-2 py-0.5 text-xs font-medium text-brand-dark">{descProduct.kind}</span>
+            <p className="text-sm font-semibold text-brand-dark">{formatUsd(descProduct.priceCents)} {t.catalog.each}</p>
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-body">
               {descProduct.description}
             </p>
