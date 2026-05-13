@@ -1,6 +1,6 @@
 import { PaymentGatewayId, PaymentStatus } from "@prisma/client";
-import type { HostedCheckoutInput, HostedCheckoutOutput, PaymentGatewayAdapter } from "./types";
-import { verifyStandardWebhookHmac } from "./verify-webhook-hmac";
+import type { HostedCheckoutInput, HostedCheckoutOutput, PaymentGatewayAdapter, RefundInput, RefundOutput } from "./types";
+import { verifyStandardWebhookHmac, verifyWorldpayWebhookAuth } from "./verify-webhook-hmac";
 
 function appUrl() {
   return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -33,9 +33,15 @@ export const worldpayGateway: PaymentGatewayAdapter = {
     };
   },
 
+  async refundPayment(_input: RefundInput): Promise<RefundOutput> {
+    return { success: true, providerRefundId: `wp_refund_stub_${Date.now()}` };
+  },
+
   verifyWebhookRequest(headers: Headers, rawBody: string) {
-    const secret = process.env.WORLDPAY_WEBHOOK_SECRET;
-    return verifyStandardWebhookHmac(headers, rawBody, secret);
+    if (process.env.WORLDPAY_WEBHOOK_USERNAME || process.env.WORLDPAY_WEBHOOK_PASSWORD) {
+      return verifyWorldpayWebhookAuth(headers, rawBody);
+    }
+    return verifyStandardWebhookHmac(headers, rawBody, process.env.WORLDPAY_WEBHOOK_SECRET);
   },
 
   parseWebhookPayload(rawBody: unknown) {
@@ -44,13 +50,15 @@ export const worldpayGateway: PaymentGatewayAdapter = {
     const orderCode =
       typeof body.orderCode === "string"
         ? body.orderCode
-        : typeof body.ordercode === "string"
-          ? body.ordercode
-          : typeof body.paymentReference === "string"
-            ? body.paymentReference
-            : typeof body.PaymentReference === "string"
-              ? body.PaymentReference
-              : null;
+        : typeof body.OrderCode === "string"
+          ? body.OrderCode
+          : typeof body.ordercode === "string"
+            ? body.ordercode
+            : typeof body.paymentReference === "string"
+              ? body.paymentReference
+              : typeof body.PaymentReference === "string"
+                ? body.PaymentReference
+                : null;
     if (!orderCode) return null;
 
     const lastEventRaw =

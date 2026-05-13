@@ -1,6 +1,6 @@
 import { PaymentGatewayId, PaymentStatus } from "@prisma/client";
 import { airwallexAmountMajorFromStoreCents, airwallexApiBase, airwallexLoginDetailed } from "./airwallex-api";
-import type { HostedCheckoutInput, HostedCheckoutOutput, PaymentGatewayAdapter } from "./types";
+import type { HostedCheckoutInput, HostedCheckoutOutput, PaymentGatewayAdapter, RefundInput, RefundOutput } from "./types";
 import { verifyAirwallexWebhookSignature } from "./verify-webhook-hmac";
 
 function appUrl() {
@@ -128,6 +128,42 @@ export const airwallexGateway: PaymentGatewayAdapter = {
     return verifyAirwallexWebhookSignature(headers, rawBody, secret);
   },
 
+  async refundPayment(input: RefundInput): Promise<RefundOutput> {
+    const clientId = process.env.AIRWALLEX_CLIENT_ID?.trim();
+    const apiKey = process.env.AIRWALLEX_API_KEY?.trim();
+    if (!clientId || !apiKey) {
+      return { success: true, providerRefundId: `awx_refund_stub_${Date.now()}` };
+    }
+
+    const login = await airwallexLoginDetailed();
+    if (!login.ok) {
+      return { success: false, providerRefundId: null, error: "Airwallex login failed" };
+    }
+
+    const res = await fetch(`${airwallexApiBase()}/api/v1/pa/refunds/create`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${login.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        request_id: crypto.randomUUID(),
+        payment_intent_id: input.providerPaymentId,
+        amount: airwallexAmountMajorFromStoreCents(input.amountCents, input.currency),
+        reason: input.reason ?? "admin_refund",
+      }),
+    });
+
+    const data = (await res.json()) as Record<string, unknown>;
+    if (!res.ok) {
+      const msg = typeof data.message === "string" ? data.message : `HTTP ${res.status}`;
+      return { success: false, providerRefundId: null, error: msg };
+    }
+
+    const refundId = typeof data.id === "string" ? data.id : `awx_refund_${Date.now()}`;
+    return { success: true, providerRefundId: refundId };
+  },
+
   parseWebhookPayload(rawBody: unknown) {
     if (!rawBody || typeof rawBody !== "object") return null;
     const body = rawBody as Record<string, unknown>;
@@ -141,19 +177,30 @@ export const airwallexGateway: PaymentGatewayAdapter = {
       }
     }
 
-    const intentId =
-      typeof source.id === "string" && source.id.startsWith("int_")
-        ? source.id
-        : typeof source.payment_intent_id === "string"
-          ? source.payment_intent_id
-          : typeof body.payment_intent_id === "string"
-            ? body.payment_intent_id
-            : typeof body.id === "string" && body.id.startsWith("int_")
-              ? body.id
-              : null;
+    const eventName = typeof body.name === "string" ? body.name.toLowerCase() : "";
+    const isRefundEvent = eventName.startsWith("refund.");
+
+    // Airwallex refund objects have id "rfnd_xxx" and carry the original
+    // payment_intent_id we need for DB lookup. Prefer payment_intent_id when
+    // the event is a refund so we match the checkout-time reference.
+    let intentId: string | null = null;
+    if (isRefundEvent) {
+      intentId =
+        typeof source.payment_intent_id === "string" ? source.payment_intent_id
+        : typeof body.payment_intent_id === "string" ? body.payment_intent_id
+        : typeof source.id === "string" && source.id.startsWith("int_") ? source.id
+        : typeof body.id === "string" && body.id.startsWith("int_") ? body.id
+        : null;
+    } else {
+      intentId =
+        typeof source.id === "string" && source.id.startsWith("int_") ? source.id
+        : typeof source.payment_intent_id === "string" ? source.payment_intent_id
+        : typeof body.payment_intent_id === "string" ? body.payment_intent_id
+        : typeof body.id === "string" && body.id.startsWith("int_") ? body.id
+        : null;
+    }
     if (!intentId) return null;
 
-    const eventName = typeof body.name === "string" ? body.name.toLowerCase() : "";
     const statusRaw = typeof source.status === "string" ? source.status.toLowerCase() : "";
 
     let status: PaymentStatus = PaymentStatus.PROCESSING;

@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback } from "react";
+import { useActionState, useCallback } from "react";
 import { useTranslation } from "@/lib/i18n/language-context";
 import { useSearchPagination, SearchBar, Pagination } from "@/components/admin-list-controls";
+import { refundPaymentAction } from "@/actions/refunds";
 
 export type PaymentRow = {
   id: string;
@@ -14,6 +15,35 @@ export type PaymentRow = {
   amount: string;
   providerRef: string;
 };
+
+function RefundButton({ paymentId }: { paymentId: string }) {
+  const { t } = useTranslation();
+  const [state, action] = useActionState(
+    refundPaymentAction,
+    null as { ok?: boolean; error?: string } | null,
+  );
+
+  return (
+    <form
+      action={action}
+      onSubmit={(e) => {
+        if (!window.confirm(t.admin.refundConfirm)) e.preventDefault();
+      }}
+    >
+      <input type="hidden" name="paymentId" value={paymentId} />
+      {state?.error && <p className="text-xs text-red-600">{state.error}</p>}
+      {state?.ok && <p className="text-xs text-green-600">{t.admin.refundSuccess}</p>}
+      {!state?.ok && (
+        <button
+          type="submit"
+          className="rounded-md border border-red-300 px-3 py-1 text-xs font-medium text-red-700 hover:bg-red-50"
+        >
+          {t.admin.refund}
+        </button>
+      )}
+    </form>
+  );
+}
 
 export function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
   const { t } = useTranslation();
@@ -54,6 +84,7 @@ export function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
               <th className="px-4 py-2">{t.admin.status}</th>
               <th className="px-4 py-2">{t.admin.amount}</th>
               <th className="px-4 py-2">{t.admin.providerRef}</th>
+              <th className="px-4 py-2">{t.admin.actions}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -68,11 +99,14 @@ export function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
                 <td className="px-4 py-2 font-medium text-ink">{p.status}</td>
                 <td className="px-4 py-2">{p.amount}</td>
                 <td className="px-4 py-2 font-mono text-xs text-body">{p.providerRef}</td>
+                <td className="px-4 py-2">
+                  {p.status === "SUCCEEDED" && <RefundButton paymentId={p.id} />}
+                </td>
               </tr>
             ))}
             {paginated.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-sm text-muted">
+                <td colSpan={7} className="px-4 py-6 text-center text-sm text-muted">
                   {t.admin.noPaymentsFound}
                 </td>
               </tr>

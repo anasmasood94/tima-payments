@@ -1,4 +1,4 @@
-import type { PaymentGatewayId, PaymentStatus } from "@prisma/client";
+import { type PaymentGatewayId, PaymentStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { settlePaymentStatus } from "./settle-payment";
 
@@ -19,6 +19,12 @@ export async function applyPaymentStatusByProviderRef(params: {
   });
 
   if (!payment) {
+    if (status === PaymentStatus.REFUNDED) {
+      console.warn(
+        `[applyPaymentStatus] REFUNDED webhook could not find payment: gateway=${gatewayId} providerPaymentId=${providerPaymentId}. ` +
+        `The PSP may have sent a refund-specific reference instead of the original checkout reference.`,
+      );
+    }
     return { ok: false as const, reason: "payment_not_found" };
   }
 

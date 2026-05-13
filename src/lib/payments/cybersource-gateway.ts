@@ -1,6 +1,6 @@
 import { PaymentGatewayId, PaymentStatus } from "@prisma/client";
-import type { HostedCheckoutInput, HostedCheckoutOutput, PaymentGatewayAdapter } from "./types";
-import { verifyStandardWebhookHmac } from "./verify-webhook-hmac";
+import type { HostedCheckoutInput, HostedCheckoutOutput, PaymentGatewayAdapter, RefundInput, RefundOutput } from "./types";
+import { verifyCybersourceWebhookSignature } from "./verify-webhook-hmac";
 
 function appUrl() {
   return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -35,9 +35,12 @@ export const cybersourceGateway: PaymentGatewayAdapter = {
     };
   },
 
+  async refundPayment(_input: RefundInput): Promise<RefundOutput> {
+    return { success: true, providerRefundId: `cs_refund_stub_${Date.now()}` };
+  },
+
   verifyWebhookRequest(headers: Headers, rawBody: string) {
-    const secret = process.env.CYBERSOURCE_WEBHOOK_SECRET;
-    return verifyStandardWebhookHmac(headers, rawBody, secret);
+    return verifyCybersourceWebhookSignature(headers, rawBody, process.env.CYBERSOURCE_WEBHOOK_SECRET);
   },
 
   parseWebhookPayload(rawBody: unknown) {
@@ -56,7 +59,9 @@ export const cybersourceGateway: PaymentGatewayAdapter = {
                 ? body.req_reference_number
                 : typeof body.req_transaction_uuid === "string"
                   ? body.req_transaction_uuid
-                  : null;
+                  : typeof body.merchantReferenceCode === "string"
+                    ? body.merchantReferenceCode
+                    : null;
     if (!id) return null;
 
     const statusRaw = typeof body.status === "string" ? body.status.toLowerCase() : "";

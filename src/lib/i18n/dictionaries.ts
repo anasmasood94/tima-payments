@@ -343,6 +343,10 @@ export const dictionaries = {
       noProductsFound: "No products found.",
       create: "Create",
       saveChanges: "Save changes",
+      refund: "Refund",
+      refundConfirm: "Are you sure you want to refund this payment?",
+      refundSuccess: "Refund initiated successfully.",
+      refundError: "Failed to initiate refund.",
     },
     pagination: {
       prev: "Prev",
@@ -828,6 +832,10 @@ export const dictionaries = {
       noProductsFound: "未找到产品。",
       create: "创建",
       saveChanges: "保存更改",
+      refund: "退款",
+      refundConfirm: "确定要退款此笔付款吗？",
+      refundSuccess: "退款已成功发起。",
+      refundError: "退款发起失败。",
     },
     pagination: {
       prev: "上一页",

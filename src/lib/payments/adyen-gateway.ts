@@ -1,6 +1,6 @@
 import { PaymentGatewayId, PaymentStatus } from "@prisma/client";
-import type { HostedCheckoutInput, HostedCheckoutOutput, PaymentGatewayAdapter } from "./types";
-import { verifyStandardWebhookHmac } from "./verify-webhook-hmac";
+import type { HostedCheckoutInput, HostedCheckoutOutput, PaymentGatewayAdapter, RefundInput, RefundOutput } from "./types";
+import { verifyAdyenWebhookSignature } from "./verify-webhook-hmac";
 
 function appUrl() {
   return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -34,18 +34,26 @@ export const adyenGateway: PaymentGatewayAdapter = {
     };
   },
 
+  // Real implementation: POST /v71/payments/{pspReference}/refunds with { amount: { value, currency } }
+  async refundPayment(_input: RefundInput): Promise<RefundOutput> {
+    return { success: true, providerRefundId: `adyen_refund_stub_${Date.now()}` };
+  },
+
   verifyWebhookRequest(headers: Headers, rawBody: string) {
-    const hmac = process.env.ADYEN_HMAC_KEY;
-    // Staging: `X-Webhook-Signature: sha256=<hmac>` (see `verify-webhook-hmac.ts`). Production Adyen notifications
-    // typically use `additionalData.hmacSignature` over a canonical string — extend when wiring live traffic.
-    return verifyStandardWebhookHmac(headers, rawBody, hmac);
+    return verifyAdyenWebhookSignature(headers, rawBody, process.env.ADYEN_HMAC_KEY);
   },
 
   parseWebhookPayload(rawBody: unknown) {
     if (!rawBody || typeof rawBody !== "object") return null;
     const body = rawBody as Record<string, unknown>;
     const eventCode = typeof body.eventCode === "string" ? body.eventCode : "";
-    const psp = typeof body.pspReference === "string" ? body.pspReference : typeof body.originalReference === "string" ? body.originalReference : null;
+
+    // Adyen REFUND notifications carry their own pspReference (the refund txn);
+    // originalReference holds the checkout pspReference stored at payment creation.
+    const isRefundEvent = eventCode === "REFUND";
+    const psp = isRefundEvent
+      ? (typeof body.originalReference === "string" ? body.originalReference : typeof body.pspReference === "string" ? body.pspReference : null)
+      : (typeof body.pspReference === "string" ? body.pspReference : typeof body.originalReference === "string" ? body.originalReference : null);
     if (!psp) return null;
 
     let status: PaymentStatus = PaymentStatus.PROCESSING;

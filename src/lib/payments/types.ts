@@ -25,6 +25,19 @@ export type NormalizedWebhookPayment = {
   status: PaymentStatus;
 };
 
+export type RefundInput = {
+  providerPaymentId: string;
+  amountCents: number;
+  currency: string;
+  reason?: string;
+};
+
+export type RefundOutput = {
+  success: boolean;
+  providerRefundId: string | null;
+  error?: string;
+};
+
 export interface PaymentGatewayAdapter {
   readonly gatewayId: PaymentGatewayId;
   createHostedCheckout(input: HostedCheckoutInput): Promise<HostedCheckoutOutput>;
@@ -32,4 +45,5 @@ export interface PaymentGatewayAdapter {
   verifyWebhookRequest(headers: Headers, rawBody: string): boolean;
   /** Parse provider JSON body into a normalized payment update, or null if ignored. */
   parseWebhookPayload(rawBody: unknown): NormalizedWebhookPayment | null;
+  refundPayment?(input: RefundInput): Promise<RefundOutput>;
 }
