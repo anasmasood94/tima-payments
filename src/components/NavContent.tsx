@@ -23,7 +23,7 @@ export function NavContent({ session }: Props) {
           <Link href="/home" className="text-muted transition-colors hover:text-ink">
             {t.nav.home}
           </Link>
-          <Link href="/home#about" className="text-muted transition-colors hover:text-ink">
+          <Link href="/about" className="text-muted transition-colors hover:text-ink">
             {t.nav.aboutUs}
           </Link>
           <Link href="/home#services" className="text-muted transition-colors hover:text-ink">
