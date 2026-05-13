@@ -57,9 +57,16 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
   return (
     <div className="space-y-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-ink">{t.admin.productsTitle}</h1>
-          <p className="mt-1 text-sm text-body">{t.admin.productsDesc}</p>
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10">
+            <svg className="h-5 w-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-ink">{t.admin.productsTitle}</h1>
+            <p className="mt-1 text-sm text-body">{t.admin.productsDesc}</p>
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
@@ -68,7 +75,7 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
               setEditId(null);
               setCreateOpen(true);
             }}
-            className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark"
+            className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white shadow-sm shadow-brand/25 transition-colors hover:bg-brand-dark"
           >
             {t.admin.createProduct}
           </button>
@@ -79,25 +86,35 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
         <SearchBar value={query} onChange={setQuery} placeholder={t.admin.searchProducts} />
       </div>
 
-      <section className="overflow-hidden rounded-xl border border-line bg-white">
+      <section className="overflow-hidden rounded-xl border border-line bg-white shadow-sm">
         <table className="w-full text-left text-sm">
-          <thead className="bg-panel text-xs uppercase text-body">
+          <thead className="bg-gradient-to-r from-brand/5 to-transparent text-xs uppercase text-body">
             <tr>
-              <th className="px-4 py-2">{t.admin.name}</th>
-              <th className="px-4 py-2">{t.admin.sku}</th>
-              <th className="px-4 py-2">{t.admin.price}</th>
-              <th className="px-4 py-2">{t.admin.active}</th>
-              <th className="px-4 py-2 text-right">{t.admin.actions}</th>
+              <th className="px-4 py-3 font-semibold">{t.admin.name}</th>
+              <th className="px-4 py-3 font-semibold">{t.admin.sku}</th>
+              <th className="px-4 py-3 font-semibold">{t.admin.price}</th>
+              <th className="px-4 py-3 font-semibold">{t.admin.active}</th>
+              <th className="px-4 py-3 text-right font-semibold">{t.admin.actions}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
             {paginated.map((p) => (
-              <tr key={p.id}>
-                <td className="px-4 py-2 font-medium text-ink">{p.name}</td>
-                <td className="px-4 py-2 text-body">{p.sku}</td>
-                <td className="px-4 py-2">{formatUsd(p.priceCents)}</td>
-                <td className="px-4 py-2">{p.active ? t.admin.yes : t.admin.no}</td>
-                <td className="px-4 py-2 text-right">
+              <tr key={p.id} className="transition-colors hover:bg-brand/[0.02]">
+                <td className="px-4 py-3 font-medium text-ink">{p.name}</td>
+                <td className="px-4 py-3 font-mono text-xs text-body">{p.sku}</td>
+                <td className="px-4 py-3 font-medium text-ink">{formatUsd(p.priceCents)}</td>
+                <td className="px-4 py-3">
+                  {p.active ? (
+                    <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                      {t.admin.yes}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center rounded-full bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/20">
+                      {t.admin.no}
+                    </span>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-right">
                   <div className="flex flex-wrap items-center justify-end gap-2">
                     <button
                       type="button"
@@ -105,14 +122,14 @@ function ProductsAdminPanelInner({ products }: { products: ProductRow[] }) {
                         setCreateOpen(false);
                         setEditId(p.id);
                       }}
-                      className="font-medium text-ink underline"
+                      className="font-medium text-brand transition-colors hover:text-brand-dark"
                     >
                       {t.admin.edit}
                     </button>
                     {p.active ? (
                       <form action={deactivateProductFormAction} className="inline">
                         <input type="hidden" name="id" value={p.id} />
-                        <button type="submit" className="text-xs font-medium text-red-700 underline">
+                        <button type="submit" className="text-xs font-medium text-red-600 underline transition-colors hover:text-red-800">
                           {t.admin.removeFromCatalog}
                         </button>
                       </form>
