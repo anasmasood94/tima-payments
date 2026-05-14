@@ -81,9 +81,9 @@ export const dictionaries = {
       learnMore: "Learn More",
       cards: [
         { title: "Dropshipping", subtitle: "Ship directly to customer from us," },
-        { title: "Warehousing", subtitle: "Warehousing for the Southern California market." },
-        { title: "OTR Trucking", subtitle: "From standard LTL/FTL to air and everything in between." },
-        { title: "Drayage", subtitle: "Short-haul transportation services at major US ports." },
+        { title: "Warehousing", subtitle: "Warehousing operations in the Southern California market." },
+        { title: "OTR Trucking", subtitle: "From standard LTL/FTL to air freight and everything in between." },
+        { title: "Drayage", subtitle: "Drayage service at US major ports." },
       ],
     },
     testimonials: {
