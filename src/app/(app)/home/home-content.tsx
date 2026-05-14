@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import { useTranslation } from "@/lib/i18n/language-context";
 
 const serviceImages = [
@@ -49,6 +50,34 @@ function TestimonialQuoteIcon() {
 
 export function HomeContent() {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const revealEls = Array.from(document.querySelectorAll<HTMLElement>(".b612-float-in, .b612-float-up"));
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      revealEls.forEach((el) => el.classList.add("b612-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("b612-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: "0px 0px -10% 0px",
+        threshold: 0.15,
+      },
+    );
+
+    revealEls.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>

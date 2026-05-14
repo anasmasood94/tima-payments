@@ -1,76 +1,167 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "@/lib/i18n/language-context";
 
+const workflowImages = [
+  { src: "/workflow-order-booking-live.jpg", alt: "Image by NEW DATA SERVICES" },
+  { src: "/workflow-warehousing-live.jpg", alt: "Image by Alberto Rodriguez" },
+  { src: "/workflow-dispatch-routing-live.jpg", alt: "Image by Marcin Jozwiak" },
+  { src: "/workflow-delivery-proof-live.jpg", alt: "Image by Lukas Blazek" },
+];
+
+const costFeatureImages = [
+  { src: "/cost-tracking-live.png", alt: "Business chart icon" },
+  { src: "/cost-sandbox-live.jpg", alt: "Cost sandbox chart" },
+  { src: "/cost-bargaining-live.jpg", alt: "Bargaining cockpit chart" },
+  { src: "/cost-dashboard-live.jpg", alt: "Funding dashboard checklist" },
+];
+
 export function AboutContent() {
-  const { t } = useTranslation();
+  const { locale, t } = useTranslation();
+
+  useEffect(() => {
+    const animatedElements = Array.from(
+      document.querySelectorAll<HTMLElement>(".b612-float-in, .b612-float-up, .b612-fade-in")
+    );
+
+    if (animatedElements.length === 0) {
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      animatedElements.forEach((element) => element.classList.add("b612-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          entry.target.classList.add("b612-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    animatedElements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, [locale]);
 
   return (
     <>
       {/* ── Hero Banner ── */}
-      <section className="relative h-[50vh] min-h-[340px] overflow-hidden">
-        <Image src="/nsplsh.jpg" alt="Container port" fill priority className="object-cover" />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-5 text-center sm:px-10 lg:px-20">
-          <h1 className="text-5xl font-bold text-white sm:text-6xl">{t.aboutPage.title}</h1>
+      <section className="relative min-h-[600px] overflow-hidden bg-black">
+        <Image
+          src="/about-hero-live.jpg"
+          alt="Container port"
+          fill
+          priority
+          className="object-cover opacity-80"
+          sizes="100vw"
+        />
+        <div className="relative z-10 mx-auto h-[600px] w-[980px] max-w-full">
+          <h1 className="absolute left-1/2 top-[272px] w-[450px] max-w-[calc(100vw-40px)] -translate-x-1/2 text-center text-[57px] font-bold leading-[1.2em] tracking-[-0.03em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.aboutPage.title}
+          </h1>
         </div>
       </section>
 
       {/* ── Company Intro ── */}
-      <section className="bg-white px-5 py-10 sm:px-10 lg:px-20">
-        <div className="grid items-stretch overflow-hidden rounded-md bg-panel lg:grid-cols-2">
-          <div className="flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-20 lg:py-16">
-            <h2 className="text-2xl font-bold leading-snug text-neutral-800 sm:text-3xl">
-              {t.aboutPage.subtitle}
-            </h2>
-            <p className="mt-5 text-[15px] font-medium text-neutral-700">{t.aboutPage.intro}</p>
-            <div className="mt-6 space-y-5 text-[15px] leading-[1.8] text-neutral-600">
-              <p>{t.aboutPage.description1}</p>
-              <p>{t.aboutPage.description2}</p>
-              <p>{t.aboutPage.description3}</p>
+      <section className="bg-white py-[50px]">
+        <div className="b612-services-strip mx-auto grid min-h-[600px] items-stretch overflow-hidden bg-[#F5F5F5] lg:grid-cols-2">
+          <div className="flex justify-center">
+            <div className="w-full max-w-[490px] pb-[41px] pt-10">
+              <h2 className="b612-float-in mb-5 text-[38px] font-bold leading-[1.2em] tracking-[-0.03em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {t.aboutPage.subtitle === "A Fulfillment Logistics Company" ? (
+                  <>
+                    A Fulfillment
+                    <br />
+                    Logistics Company
+                  </>
+                ) : (
+                  t.aboutPage.subtitle
+                )}
+              </h2>
+              <div className="b612-float-in space-y-6 text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                <p>{t.aboutPage.intro}</p>
+                <p>{t.aboutPage.description1}</p>
+                <p>{t.aboutPage.description2}</p>
+                <p>{t.aboutPage.description3}</p>
+              </div>
             </div>
           </div>
-          <div className="relative min-h-[400px] lg:min-h-0">
-            <Image src="/nsplsh2.jpg" alt="Warehouse interior" fill className="object-cover" />
+          <div className="relative min-h-[600px]">
+            <Image
+              src="/about-warehouse-live.jpg"
+              alt="Warehouse interior"
+              fill
+              quality={100}
+              className="object-cover"
+              sizes="(min-width: 1024px) 1800px, 100vw"
+            />
           </div>
         </div>
       </section>
 
       {/* ── End-to-End Solutions ── */}
-      <section className="relative py-24">
-        <Image src="/11062b.jpg" alt="Logistics facility aerial" fill className="object-cover" />
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 mx-auto max-w-4xl px-5 text-center sm:px-10 lg:px-20">
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">{t.aboutPage.endToEnd.title}</h2>
-          <p className="mt-6 text-[15px] leading-[1.8] text-neutral-300">{t.aboutPage.endToEnd.description}</p>
+      <section className="relative min-h-[400px] overflow-hidden bg-[#00060F]">
+        <Image
+          src="/11062b.jpg"
+          alt="Logistics facility aerial"
+          fill
+          className="object-cover opacity-40"
+          sizes="100vw"
+        />
+        <div className="relative z-10 mx-auto w-[980px] max-w-full pt-[115px] text-center">
+          <h2 className="b612-float-up mb-5 text-[38px] font-bold leading-[1.4em] tracking-normal text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.aboutPage.endToEnd.title}
+          </h2>
+          <p className="b612-float-up text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.aboutPage.endToEnd.description}
+          </p>
         </div>
       </section>
 
       {/* ── Workflow Automation + Process Steps ── */}
-      <section className="bg-white py-24">
-        <div className="mx-auto max-w-4xl px-5 text-center sm:px-10 lg:px-20">
-          <h2 className="text-2xl font-bold text-neutral-800 sm:text-3xl lg:text-4xl">{t.aboutPage.workflow.title}</h2>
-          <p className="mx-auto mt-6 max-w-3xl text-[15px] leading-[1.8] text-neutral-500">
+      <section className="overflow-hidden bg-white">
+        <div className="mx-auto my-[50px] w-[980px] max-w-full text-center">
+          <h2 className="b612-float-up mx-auto mb-5 w-[490px] max-w-[calc(100vw_-_40px)] text-[38px] font-bold leading-[1.2em] tracking-[-0.03em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.aboutPage.workflow.title}
+          </h2>
+          <p className="b612-float-up text-center text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
             {t.aboutPage.workflow.description}
           </p>
         </div>
 
-        <div className="mx-auto mt-10 grid max-w-[1200px] gap-8 px-5 sm:mt-16 sm:grid-cols-2 sm:gap-12 sm:px-10 lg:px-20">
-          {[
-            { src: "/Order Booking.avif", alt: "Order Booking" },
-            { src: "/Dispatch_Routing.jpg", alt: "Dispatch & Routing" },
-            { src: "/Warehousing.jpg", alt: "Warehousing" },
-            { src: "/Delivery_Proof .jpg", alt: "Delivery Proof" },
-          ].map((img, i) => (
-            <div key={i} className="rounded-2xl border border-neutral-200 bg-white p-2.5 shadow-sm">
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl">
-                <Image src={img.src} alt={img.alt} fill className="object-cover" />
+        <div className="mx-auto mb-[50px] grid w-[calc(100%_-_80px)] max-w-[1200px] gap-x-[50px] gap-y-[50px] sm:grid-cols-2">
+          {workflowImages.map((img, i) => (
+            <div
+              key={img.src}
+              className="b612-float-up overflow-hidden rounded-[30px] border border-[#D9D9D9] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.2)]"
+            >
+              <div className="relative aspect-[575/300] w-full overflow-hidden rounded-t-[30px] border-[10px] border-white">
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 555px, calc(100vw - 40px)"
+                />
               </div>
-              <div className="px-5 py-6">
-                <h3 className="text-lg font-bold text-neutral-800">{t.aboutPage.steps[i].title}</h3>
-                <p className="mt-3 text-[14px] leading-[1.8] text-neutral-500">{t.aboutPage.steps[i].description}</p>
+              <div className="px-[17px] pb-[30px] pt-[10px]">
+                <h3 className="mb-5 text-[24px] font-bold leading-[1.3em] tracking-[-0.01em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                  {t.aboutPage.steps[i].title}
+                </h3>
+                <p className="text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                  {t.aboutPage.steps[i].description}
+                </p>
               </div>
             </div>
           ))}
@@ -78,55 +169,52 @@ export function AboutContent() {
       </section>
 
       {/* ── Cost Tracking ── */}
-      <section className="bg-[#e8f5f0] py-24">
-        <div className="mx-auto max-w-4xl px-5 text-center sm:px-10 lg:px-20">
-          <h2 className="text-2xl font-bold text-neutral-800 sm:text-3xl lg:text-4xl">{t.aboutPage.costSection.title}</h2>
-          <p className="mt-4 text-[15px] text-neutral-500">{t.aboutPage.costSection.subtitle}</p>
+      <section className="overflow-hidden bg-[linear-gradient(135deg,#DEF5F1_0%,#ECF9F7_48.77193183229681%,#FFFFFF_100%)]">
+        <div className="b612-float-up mx-auto my-[50px] w-[650px] max-w-[calc(100%_-_40px)] text-center">
+          <h2 className="mb-5 text-[38px] font-bold leading-[1.2em] tracking-[-0.03em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.aboutPage.costSection.title}
+          </h2>
+          <p className="mx-auto mb-5 w-[608px] max-w-full text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.aboutPage.costSection.subtitle}
+          </p>
           <a
             href="mailto:FF@B612timainc.com?subject=Quote%20from%20website"
-            className="mt-6 inline-block rounded-full bg-brand px-8 py-3 text-sm font-bold tracking-wide text-white transition hover:bg-brand-dark"
+            className="b612-live-button inline-flex h-[45px] w-[180px] items-center justify-center rounded-[10px] bg-[#14AA3C] text-[16px] font-normal leading-none tracking-normal text-white [font-family:'Helvetica_W01',Arial,sans-serif] hover:bg-[#14AA3C]"
           >
             {t.aboutPage.costSection.cta}
           </a>
         </div>
-        <div className="mx-auto mt-10 grid max-w-6xl gap-8 px-5 sm:mt-16 sm:grid-cols-2 sm:gap-10 sm:px-10 lg:grid-cols-4 lg:px-20">
+
+        <div className="mx-auto mb-[50px] flex w-[1200px] justify-between">
           {t.aboutPage.costFeatures.map((feat, i) => (
-            <div key={i}>
-              <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-white">
-                {i === 0 && (
-                  <svg className="h-10 w-10 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                  </svg>
-                )}
-                {i === 1 && (
-                  <svg className="h-10 w-10 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                  </svg>
-                )}
-                {i === 2 && (
-                  <svg className="h-10 w-10 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-                  </svg>
-                )}
-                {i === 3 && (
-                  <svg className="h-10 w-10 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15a2.25 2.25 0 012.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
-                  </svg>
-                )}
+            <div key={costFeatureImages[i].src} className="b612-float-up w-[285px] overflow-hidden rounded-[30px] bg-white">
+              <div className="relative mb-5 ml-[27px] mt-5 h-[126px] w-[200px]">
+                <Image
+                  src={costFeatureImages[i].src}
+                  alt={costFeatureImages[i].alt}
+                  fill
+                  className="object-cover"
+                  sizes="200px"
+                />
               </div>
-              <h3 className="text-sm font-bold text-neutral-800">{feat.title}</h3>
-              <p className="mt-2 text-[13px] leading-[1.8] text-neutral-500">{feat.description}</p>
+              <h3 className="mb-5 ml-[27px] w-[230px] text-[20px] font-bold leading-[1.4em] tracking-[-0.02em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {feat.title}
+              </h3>
+              <p className="mb-5 ml-[27px] w-[230px] text-[16px] font-normal leading-[1.5em] tracking-[-0.01em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {feat.description}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── FAQ ── */}
-      <section className="bg-white py-24">
+      <section className="bg-white pb-5 pt-[30px]">
         <div className="mx-auto max-w-6xl px-5 sm:px-10 lg:px-20">
-          <h2 className="text-center text-3xl font-bold text-neutral-800 sm:text-4xl lg:text-5xl">{t.aboutPage.faqTitle}</h2>
-          <div className="mt-16 divide-y divide-neutral-200">
+          <h2 className="mb-[42px] text-center text-[38px] font-bold leading-[1.4em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+            {t.aboutPage.faqTitle}
+          </h2>
+          <div className="divide-y divide-[#F5F5F5]">
             {t.aboutPage.faqs.map((faq, i) => (
               <FaqItem key={i} index={i + 1} question={faq.q} answer={faq.a} />
             ))}
@@ -138,7 +226,7 @@ export function AboutContent() {
 }
 
 function FaqItem({ index, question, answer }: { index: number; question: string; answer: string }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(index === 1);
 
   const parts: { type: "text" | "bullets"; content: string[] }[] = [];
   const lines = answer.split("\n");
@@ -156,26 +244,27 @@ function FaqItem({ index, question, answer }: { index: number; question: string;
   }
 
   return (
-    <div className="py-6">
+    <div className="py-8">
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between text-left"
       >
-        <span className="text-lg font-bold text-neutral-800">
+        <span className="text-[20px] font-bold leading-[1.4em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
           {index}. {question}
         </span>
         <svg
-          className={`ml-6 h-5 w-5 shrink-0 text-neutral-400 transition-transform ${open ? "rotate-180" : ""}`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
+          className={`ml-6 h-6 w-6 shrink-0 text-black transition-transform ${open ? "rotate-180" : ""}`}
+          fill="currentColor"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          <path
+            fillRule="evenodd"
+            d="M18.2546728,8.18171329 L18.9617796,8.88882007 L12.5952867,15.2537133 L12.5978964,15.2558012 L11.8907896,15.962908 L11.8882867,15.9607133 L11.8874628,15.9617796 L11.180356,15.2546728 L11.1812867,15.2527133 L4.81828671,8.88882007 L5.52539349,8.18171329 L11.8882867,14.5457133 L18.2546728,8.18171329 Z"
+          />
         </svg>
       </button>
       {open && (
-        <div className="mt-4 text-[15px] leading-[1.8] text-neutral-500">
+        <div className="mt-5 text-[16px] font-normal leading-[24px] text-[#747474] [font-family:'Helvetica_W01',Arial,sans-serif]">
           {parts.map((part, i) =>
             part.type === "bullets" ? (
               <ul key={i} className="my-2 list-disc space-y-1 pl-6">

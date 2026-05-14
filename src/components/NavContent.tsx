@@ -52,12 +52,15 @@ export function NavContent({ session }: Props) {
   return (
     <header className={`bg-white ${session ? "border-b border-line shadow-sm" : ""}`}>
       <div className="flex items-center justify-between px-4 py-4 sm:px-10 lg:px-20 lg:py-5">
-        <Link href="/home" className="shrink-0 text-xl font-bold tracking-tight text-ink sm:text-2xl">
+        <Link
+          href="/home"
+          className="w-[192px] shrink-0 text-[24px] font-normal leading-[1.5em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]"
+        >
           B612 Tima Inc.
         </Link>
 
         {/* Desktop nav */}
-        <nav className="ml-10 hidden flex-1 items-center gap-6 text-[15px] lg:flex lg:gap-10">
+        <nav className="hidden flex-1 items-center gap-[80px] pl-20 text-[16px] font-normal leading-[1.5em] [font-family:'Helvetica_W01',Arial,sans-serif] lg:flex">
           {links.map((link) => {
             const isActive =
               link.href === "/home"
@@ -69,7 +72,9 @@ export function NavContent({ session }: Props) {
               <Link
                 key={link.key}
                 href={link.href}
-                className={`transition-colors hover:text-ink ${isActive ? "text-muted" : "text-ink font-medium"}`}
+                className={`transition-colors ${
+                  isActive ? "text-[#8F8F8F]" : "text-black hover:text-[#8F8F8F]"
+                }`}
               >
                 {t.nav[link.key]}
               </Link>
