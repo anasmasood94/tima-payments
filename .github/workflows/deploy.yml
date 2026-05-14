@@ -38,8 +38,8 @@ jobs:
             # Symlink shared .env
             ln -sf "$APP_DIR/shared/config/.env" .env
 
-            # Install dependencies
-            npm ci --omit=dev
+            # Install all dependencies (devDependencies needed for build: tailwindcss, postcss, etc.)
+            npm ci
 
             # Generate Prisma client & run migrations
             npx prisma generate
@@ -47,6 +47,9 @@ jobs:
 
             # Build the Next.js app
             npm run build
+
+            # Remove devDependencies after build to save disk space
+            npm prune --omit=dev
 
             # Restart with PM2
             pm2 describe tima-payments > /dev/null 2>&1 && \
