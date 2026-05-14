@@ -15,9 +15,10 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: deployer
           key: ${{ secrets.DEPLOY_KEY }}
-          script_stop: true
+          command_timeout: 30m
           script: |
             set -e
+            export NODE_OPTIONS="--max-old-space-size=1024"
 
             APP_DIR=~/www/tima-payments
             REPO_URL=git@github.com:anasmasood94/tima-payments.git
