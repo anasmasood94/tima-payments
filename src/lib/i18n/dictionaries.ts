@@ -368,25 +368,25 @@ export const dictionaries = {
       subtitle: "A Fulfillment Logistics Company",
       intro: "B612 Tima Inc also calls B612 Freight Forwarder.",
       description1: "Utilizing our proprietary performance analytics, we work with customers to deliver reliable solutions for all of your complex pick, pack, ship operations.",
-      description2: "B612 Freight Forwarder is currently warehousing an Import facility in Ontario, CA, total of 80,000 Sqft. B612 provides worry-free support to global trading clients while B612 collaborates with businesses to create strategies for maximum performance, eliminating obstacles and waste. B612 use productivity measurements for improved utilization of labor and resources.",
+      description2: "B612 Freight Forwarder is currently warehousing an Import facility in Ontario. CA, total of 80,000 Sqft. B612 provides worry-free support to global trading clients while B612 collaborates with businesses to create strategies for maximum performance, eliminating obstacles and waste. B612 use productivity measurements for improved utilization of labor and resources.",
       description3: "B612 Freight Forwarder has been supporting many of the largest retail and e-commerce businesses in the country, holding the service accountable to the highest standards and fulfilling the desired outcomes of our clients.",
       endToEnd: {
         title: "Comprehensive End-to-End Logistics Solutions",
-        description: "We provide a seamless logistics experience from Order Booking to Delivery Proof, ensuring efficiency and reliability at every step. Our digital platform simplifies order management, while secure Warehousing offers optimized storage. Smart Dispatch & Routing minimizes delays, and verified Delivery Proof guarantees transparency. With real-time tracking and 24/7 support, we deliver cost-effective, scalable solutions tailored to your business needs.",
+        description: "We provide a seamless logistics experience from **Order Booking** to **Delivery Proof**, ensuring efficiency and reliability at every step. Our digital platform simplifies order management, while secure **Warehousing** offers optimized storage. Smart **Dispatch & Routing** minimizes delays, and verified **Delivery Proof** guarantees transparency. With real-time tracking and 24/7 support, we deliver cost-effective, scalable solutions tailored to your business needs. Trust us to handle your freight with precision and care.",
       },
       workflow: {
         title: "Workflow Automation",
         description: "Through intelligent automation to reconstruct the full-link management of freight, our solution integrates AI scheduling algorithms, real-time cargo tracking and intelligent document processing systems to help logistics companies reduce labor costs by 30%, improve order processing efficiency by 45%, and achieve seamless digital collaboration from warehousing to delivery.",
       },
       steps: [
-        { title: "Order Booking", description: "We streamline your order booking process with seamless digital integration. Our platform allows real-time order entry, instant confirmation, and automated documentation. Customers can track status updates, while our team ensures accuracy and efficiency." },
-        { title: "Dispatch & Routing", description: "Efficient dispatch and intelligent routing minimize delays and fuel costs. Our dynamic route optimization software adjusts for traffic, weather, and delivery windows. Real-time GPS tracking ensures transparency, while automated alerts keep stakeholders informed." },
-        { title: "Warehousing", description: "Our secure warehousing solutions offer optimized storage, inventory management, and cross-docking services. Equipped with climate control and advanced tracking, we ensure safe handling of goods. Real-time stock visibility and flexible space allocation enhance efficiency." },
-        { title: "Delivery Proof", description: "We provide digital proof of delivery (POD) with timestamped signatures, photos, and GPS verification. Our system generates instant notifications and automated reports for full transparency. This ensures accountability, reduces disputes, and enhances customer trust." },
+        { title: "Order Booking", description: "We streamline your order booking process with seamless digital integration. Our platform allows real-time order entry, instant confirmation, and automated documentation. Customers can track status updates, while our team ensures accuracy and efficiency. With 24/7 support, we handle bulk bookings, urgent requests, and customized logistics solutions. Advanced analytics help optimize load planning, reducing costs and improving turnaround times." },
+        { title: "Warehousing", description: "Our secure warehousing solutions offer optimized storage, inventory management, and cross-docking services. Equipped with climate control and advanced tracking, we ensure safe handling of goods. Real-time stock visibility, automated replenishment, and flexible space allocation enhance efficiency. Whether short-term or long-term storage, we provide scalable solutions tailored to your business needs, ensuring smooth supply chain operations." },
+        { title: "Dispatch & Routing", description: "Efficient dispatch and intelligent routing minimize delays and fuel costs. Our dynamic route optimization software adjusts for traffic, weather, and delivery windows. Real-time GPS tracking ensures transparency, while automated alerts keep stakeholders informed. We manage fleet coordination, load balancing, and last-mile logistics, ensuring timely and cost-effective deliveries tailored to your requirements." },
+        { title: "Delivery Proof", description: "We provide digital proof of delivery (POD) with timestamped signatures, photos, and GPS verification. Our system generates instant notifications and automated reports for full transparency. Discrepancy resolution is quick, with archived records for audits. This ensures accountability, reduces disputes, and enhances customer trust in your logistics operations." },
       ],
       costSection: {
         title: "Know Where Every Dollar Goes",
-        subtitle: "Every fee explained. Every dollar maximized for your success",
+        subtitle: "Every fee explained.Every dollar maximized for your success",
         cta: "Get a Free Quote",
       },
       costFeatures: [
