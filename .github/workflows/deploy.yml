@@ -1,0 +1,55 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: deployer
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -e
+
+            APP_DIR=~/www/tima-payments
+            REPO_URL=git@github.com:anasmasood94/tima-payments.git
+
+            # Clone if first deploy, otherwise pull
+            if [ ! -d "$APP_DIR/current/.git" ]; then
+              rm -rf "$APP_DIR/current"
+              git clone "$REPO_URL" "$APP_DIR/current"
+            else
+              cd "$APP_DIR/current"
+              git fetch origin main
+              git reset --hard origin/main
+            fi
+
+            cd "$APP_DIR/current"
+
+            # Symlink shared .env
+            ln -sf "$APP_DIR/shared/config/.env" .env
+
+            # Install dependencies
+            npm ci --omit=dev
+
+            # Generate Prisma client & run migrations
+            npx prisma generate
+            npx prisma migrate deploy
+
+            # Build the Next.js app
+            npm run build
+
+            # Restart with PM2
+            pm2 describe tima-payments > /dev/null 2>&1 && \
+              pm2 restart tima-payments || \
+              pm2 start npm --name tima-payments -- start
+
+            pm2 save
