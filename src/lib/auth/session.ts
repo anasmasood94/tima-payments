@@ -12,6 +12,13 @@ export type SessionPayload = {
 
 const DAY = 60 * 60 * 24;
 
+function isCookieSecure(): boolean {
+  if (process.env.COOKIE_SECURE !== undefined) {
+    return process.env.COOKIE_SECURE === "true";
+  }
+  return process.env.NODE_ENV === "production";
+}
+
 function getSecretKey() {
   const secret = process.env.SESSION_SECRET;
   if (!secret || secret.length < 16) {
@@ -50,7 +57,7 @@ export async function setSessionCookie(token: string) {
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: isCookieSecure(),
     path: "/",
     maxAge: DAY * 7,
   });

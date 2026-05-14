@@ -11,6 +11,13 @@ function generateCsrfSecret(): string {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+function isCookieSecure(): boolean {
+  if (process.env.COOKIE_SECURE !== undefined) {
+    return process.env.COOKIE_SECURE === "true";
+  }
+  return process.env.NODE_ENV === "production";
+}
+
 export const config = {
   matcher: ["/admin/:path*", "/portal/:path*"],
 };
@@ -50,7 +57,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.set(CSRF_COOKIE, generateCsrfSecret(), {
         httpOnly: true,
         sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
+        secure: isCookieSecure(),
         path: "/",
         maxAge: 60 * 60 * 24 * 7,
       });
