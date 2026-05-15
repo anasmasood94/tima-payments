@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import { useTranslation } from "@/lib/i18n/language-context";
 
 const additionalImages = [
@@ -11,32 +12,130 @@ const additionalImages = [
   "/services/Customs_Service.jpg",
 ];
 
-export function ServicesContent() {
+function OtrTruckingBody() {
   const { t } = useTranslation();
+  const copy = t.servicesPage.otrTrucking;
+
+  return (
+    <div className="text-[16px] font-normal leading-[1.6em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+      <p>{copy.description1}</p>
+      <p className="h-4" aria-hidden="true">
+        &nbsp;
+      </p>
+      <p>{copy.description2}</p>
+      <p className="h-4" aria-hidden="true">
+        &nbsp;
+      </p>
+      <p>{copy.description3}</p>
+    </div>
+  );
+}
+
+function DrayageBody({ items }: { items: readonly string[] }) {
+  const { t } = useTranslation();
+  const copy = t.servicesPage.drayage;
+
+  return (
+    <>
+      <p className="mb-5 text-[16px] font-normal leading-normal tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+        {copy.description}
+      </p>
+      <div className="mb-[40px]">
+        <h3 className="text-[16px] font-bold leading-[1.6em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+          {copy.specialTitle}
+        </h3>
+        <ul className="b612-services-list list-disc pl-5 text-[15px] font-normal leading-[1.6em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+          {items.map((item, i) => (
+            <li key={i}>
+              <p>{item}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+}
+
+function WarehousingBody() {
+  const { t } = useTranslation();
+  const copy = t.servicesPage.warehousing;
+
+  return (
+    <div className="text-[16px] font-normal leading-normal tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+      <p>{copy.description1}</p>
+      <p className="h-4" aria-hidden="true">
+        &nbsp;
+      </p>
+      <p>{copy.description2}</p>
+      <p className="h-4" aria-hidden="true">
+        &nbsp;
+      </p>
+      <p>{copy.description3}</p>
+    </div>
+  );
+}
+
+export function ServicesContent() {
+  const { locale, t } = useTranslation();
   const svc = t.servicesPage;
+
+  useEffect(() => {
+    const animatedElements = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        ".b612-float-in, .b612-float-in-right, .b612-float-up, .b612-fade-in"
+      )
+    );
+
+    if (animatedElements.length === 0) {
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      animatedElements.forEach((element) => element.classList.add("b612-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          entry.target.classList.add("b612-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    animatedElements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, [locale]);
 
   return (
     <>
       {/* ── Hero Banner ── */}
-      <section className="relative h-[70vh] min-h-[480px] overflow-hidden">
+      <section className="relative min-h-[600px] overflow-hidden bg-black">
         <Image
-          src="/services/Services.jpg"
-          alt="Logistics facility aerial"
+          src="/services-hero-live.jpg"
+          alt={svc.images.hero}
           fill
           priority
-          className="object-cover"
+          className="object-cover opacity-80"
+          sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex h-full flex-col items-start justify-end px-5 pb-10 sm:px-10 sm:pb-16 lg:px-20 lg:pb-20">
-          <h1 className="text-4xl font-bold text-white sm:text-5xl">
+        <div className="relative z-10 flex h-[600px] w-full flex-col items-start justify-start px-4 pt-[196px] sm:px-10 lg:px-20">
+          <h1 className="b612-float-in-right w-[490px] max-w-full text-[38px] font-bold leading-[1.2em] tracking-[-0.03em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
             {svc.title}
           </h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-[1.8] text-neutral-200">
+          <p className="b612-float-in-right mt-5 w-[490px] max-w-full text-[16px] font-normal leading-[1.6em] tracking-[-0.01em] text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
             {svc.subtitle}
           </p>
           <Link
             href="/about"
-            className="mt-6 inline-block rounded-full bg-brand px-8 py-3 text-sm font-bold tracking-wide text-white transition hover:bg-brand-dark"
+            className="b612-float-in-right b612-live-button mt-5 flex h-[45px] w-[180px] items-center justify-center rounded-[10px] bg-[#14AA3C] text-[16px] font-normal leading-none tracking-normal text-white [font-family:'Helvetica_W01',Arial,sans-serif] hover:bg-[#14AA3C]"
           >
             {svc.cta}
           </Link>
@@ -44,139 +143,142 @@ export function ServicesContent() {
       </section>
 
       {/* ── DROPSHIPPING — text left, image right ── */}
-      <section className="px-10 py-14 lg:px-20">
-        <div className="mx-auto grid max-w-7xl items-stretch overflow-hidden md:grid-cols-2">
-          <div className="flex flex-col justify-center bg-neutral-100 px-10 py-10 lg:px-14">
-            <h2 className="text-xl font-bold text-neutral-800">
-              {svc.dropshipping.title}
-            </h2>
-            <p className="mt-4 text-[13px] leading-[1.8] text-neutral-600">
-              {svc.dropshipping.description}
-            </p>
-            <h3 className="mt-6 text-sm font-bold text-neutral-800">
-              {svc.dropshipping.specialTitle}
-            </h3>
-            <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[13px] leading-[1.8] text-neutral-600">
-              {svc.dropshipping.items.map((item, i) => (
-                <li key={i}>{item}</li>
-              ))}
-            </ul>
+      <section className="bg-white py-[50px]">
+        <div className="b612-services-strip mx-auto grid items-stretch overflow-hidden bg-[#F5F5F5] lg:h-[551px] lg:grid-cols-2">
+          <div className="w-full lg:h-[551px]">
+            <div className="mx-auto w-full max-w-[490px]">
+              <h2 className="b612-float-in mb-5 pt-[25px] text-[24px] font-bold leading-[1.2em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {svc.dropshipping.title}
+              </h2>
+              <p className="b612-float-in mb-5 text-[16px] font-normal leading-normal tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {svc.dropshipping.description}
+              </p>
+              <div className="b612-float-in mb-[27px]">
+                <h3 className="text-[16px] font-bold leading-[1.6em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                  {svc.dropshipping.specialTitle}
+                </h3>
+                <ul className="b612-services-list list-disc pl-5 text-[16px] font-normal leading-[1.6em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                  {svc.dropshipping.items.map((item, i) => (
+                    <li key={i}>
+                      <p>{item}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
-          <div className="relative min-h-[250px] sm:min-h-[400px]">
+          <div className="relative min-h-[300px] lg:h-[551px]">
             <Image
               src="/services/DROPSHIPPING.jpg"
-              alt="Dropshipping service"
+              alt={svc.images.dropshipping}
               fill
               className="object-cover"
+              sizes="(min-width: 1024px) 490px, 100vw"
             />
           </div>
         </div>
       </section>
 
       {/* ── WAREHOUSING — image left, text right ── */}
-      <section className="px-10 py-14 lg:px-20">
-        <div className="mx-auto grid max-w-7xl items-stretch overflow-hidden md:grid-cols-2">
-          <div className="relative min-h-[250px] sm:min-h-[400px]">
+      <section className="bg-white py-[50px]">
+        <div className="b612-services-strip mx-auto grid items-stretch overflow-hidden bg-[#F5F5F5] lg:h-[602px] lg:grid-cols-2">
+          <div className="relative min-h-[300px] lg:h-[602px]">
             <Image
               src="/services/WAREHOUSING.jpg"
-              alt="Warehousing operations"
+              alt={svc.images.warehousing}
               fill
               className="object-cover"
+              sizes="(min-width: 1024px) 490px, 100vw"
             />
           </div>
-          <div className="flex flex-col justify-center bg-neutral-100 px-10 py-10 lg:px-14">
-            <h2 className="text-xl font-bold text-neutral-800">
-              {svc.warehousing.title}
-            </h2>
-            <div className="mt-4 space-y-4 text-[13px] leading-[1.8] text-neutral-600">
-              <p>{svc.warehousing.description1}</p>
-              <p>{svc.warehousing.description2}</p>
-              <p>{svc.warehousing.description3}</p>
+          <div className="w-full lg:h-[602px]">
+            <div className="b612-float-in-right mx-auto w-full max-w-[490px]">
+              <h2 className="mb-5 pt-[53px] text-[24px] font-bold leading-[1.2em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {svc.warehousing.title}
+              </h2>
+              <div className="mb-[58px]">
+                <WarehousingBody />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ── OTR TRUCKING — text left, image right ── */}
-      <section className="bg-neutral-50 px-10 py-14 lg:px-20">
-        <div className="mx-auto grid max-w-7xl overflow-hidden md:grid-cols-2">
-          <div className="flex flex-col justify-center py-8 pr-10 lg:pr-14">
-            <h2 className="text-xl font-bold text-neutral-800">
-              {svc.otrTrucking.title}
-            </h2>
-            <div className="mt-4 space-y-4 text-[13px] leading-[1.8] text-neutral-600">
-              <p>{svc.otrTrucking.description1}</p>
-              <p>{svc.otrTrucking.description2}</p>
-              <p>{svc.otrTrucking.description3}</p>
+      <section className="bg-white py-[50px]">
+        <div className="b612-services-strip mx-auto grid items-stretch overflow-hidden bg-[#F5F5F5] lg:h-[550px] lg:grid-cols-2">
+          <div className="w-full lg:h-[550px]">
+            <div className="mx-auto w-full max-w-[490px]">
+              <h2 className="b612-float-in mb-5 pt-[57px] text-[24px] font-bold leading-[1.2em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {svc.otrTrucking.title}
+              </h2>
+              <div className="b612-float-in mb-[58px]">
+                <OtrTruckingBody />
+              </div>
             </div>
           </div>
-          <div className="relative min-h-[250px] sm:min-h-[400px]">
+          <div className="relative min-h-[300px] lg:h-[550px]">
             <Image
               src="/services/TRUCKING.jpg"
-              alt="OTR trucking"
+              alt={svc.images.otrTrucking}
               fill
               className="object-cover"
+              sizes="(min-width: 1024px) 490px, 100vw"
             />
           </div>
         </div>
       </section>
 
       {/* ── DRAYAGE — image left, text right ── */}
-      <section className="px-10 py-14 lg:px-20">
-        <div className="mx-auto grid max-w-7xl items-stretch overflow-hidden md:grid-cols-2">
-          <div className="relative min-h-[250px] sm:min-h-[400px]">
+      <section className="bg-white py-[50px]">
+        <div className="b612-services-strip mx-auto grid items-stretch overflow-hidden bg-[#F5F5F5] lg:h-[601px] lg:grid-cols-2">
+          <div className="relative min-h-[300px] lg:h-[601px]">
             <Image
               src="/services/DRAYAGE.jpg"
-              alt="Drayage service"
+              alt={svc.images.drayage}
               fill
               className="object-cover"
+              sizes="(min-width: 1024px) 490px, 100vw"
             />
           </div>
-          <div className="flex flex-col justify-center bg-neutral-100 px-10 py-10 lg:px-14">
-            <h2 className="text-xl font-bold text-neutral-800">
-              {svc.drayage.title}
-            </h2>
-            <p className="mt-4 text-[13px] leading-[1.8] text-neutral-600">
-              {svc.drayage.description}
-            </p>
-            <h3 className="mt-6 text-sm font-bold text-neutral-800">
-              {svc.drayage.specialTitle}
-            </h3>
-            <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[13px] leading-[1.8] text-neutral-600">
-              {svc.drayage.items.map((item, i) => (
-                <li key={i}>{item}</li>
-              ))}
-            </ul>
+          <div className="w-full lg:h-[601px]">
+            <div className="b612-float-in-right mx-auto w-full max-w-[490px]">
+              <h2 className="mb-5 pt-[38px] text-[24px] font-bold leading-[1.2em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {svc.drayage.title}
+              </h2>
+              <DrayageBody items={svc.drayage.items} />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Additional Services ── */}
-      <section className="px-10 py-20 lg:px-20">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-3xl font-bold text-neutral-800 sm:text-4xl">
+      {/* ── Additional Services — live: comp-marwfq7m / marwki8i / marwm5h9 ── */}
+      <section className="bg-white">
+        <div className="b612-services-strip mx-auto">
+          <h2 className="b612-float-in-right my-[50px] text-[38px] font-bold leading-[1.2em] tracking-[-0.03em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
             {svc.additionalServices.title}
           </h2>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-[50px] grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {svc.additionalServices.cards.map((card, i) => (
-              <div key={i}>
-                <div className="relative aspect-[4/3] w-full overflow-hidden">
+              <article key={i} className="flex flex-col bg-[#F5F5F5]">
+                <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden">
                   <Image
                     src={additionalImages[i]}
                     alt={card.title}
                     fill
                     className="object-cover"
+                    sizes="(min-width: 1024px) 230px, 50vw"
                   />
                 </div>
-                <div className="pt-5">
-                  <h3 className="text-sm font-bold text-neutral-800">
+                <div className="box-border px-[30px] py-[15px]">
+                  <h3 className="mb-[6px] text-[20px] font-bold leading-[1.4em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
                     {card.title}
                   </h3>
-                  <p className="mt-2 text-[13px] leading-[1.7] text-neutral-500">
+                  <p className="text-[16px] font-normal leading-[1.5em] text-[#747474] [font-family:'Helvetica_W01',Arial,sans-serif]">
                     {card.description}
                   </p>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>

@@ -411,6 +411,13 @@ export const dictionaries = {
       title: "Our Services",
       subtitle: "B612 Freight Forwarder is obsessed with educating the customer, ensuring solutions get implemented correctly and also with long term relationship building.",
       cta: "Get A Free Estimate",
+      images: {
+        hero: "Logistics facility aerial",
+        dropshipping: "Dropshipping service",
+        warehousing: "Warehousing operations",
+        otrTrucking: "OTR trucking",
+        drayage: "Drayage service",
+      },
       dropshipping: {
         title: "DROPSHIPPING",
         description: "B612 Freight Forwarder Container Drayage Department helps to move your full container (FCL) Import or Export or Domestic Rail shipments direct from any Continental U.S. point of origin. Our national network offers our cargo and freight shipping clients seamless service, reliability, and flexibility that make containerized shipping easy and efficient.",
@@ -502,6 +509,33 @@ export const dictionaries = {
       message: "Write a message",
       submit: "Submit",
       successMessage: "Thank you! Your message has been sent.",
+      requiredMarker: "*",
+      phoneCountryAriaLabel: "Phone. Phone. Select a country code",
+      datePickerAriaLabel: "Shipment arrival ETA. Calendar dialog pop up collapsed",
+      contactEmail: "FF@B612TimaInc.com",
+      mailto: {
+        subjectPrefix: "Quote Request from",
+        defaultCompany: "Website",
+        company: "Company",
+        name: "Name",
+        email: "Email",
+        phone: "Phone",
+        shipmentEta: "Shipment ETA",
+        message: "Message",
+      },
+      offices: [
+        {
+          label: "2090 S. Baker Ave, Ontario, CA 91761",
+          lat: 34.0407,
+          lng: -117.6118,
+        },
+        {
+          label: "深圳市深宝茂大厦813",
+          lat: 22.6369,
+          lng: 114.0237,
+        },
+      ],
+      directions: "Directions",
     },
   },
 
@@ -911,6 +945,13 @@ export const dictionaries = {
       title: "我们的服务",
       subtitle: "B612 货运代理致力于客户教育，确保解决方案得到正确实施，并注重建立长期合作关系。",
       cta: "获取免费报价",
+      images: {
+        hero: "物流设施航拍",
+        dropshipping: "代发货服务",
+        warehousing: "仓储运营",
+        otrTrucking: "OTR 卡车运输",
+        drayage: "拖运服务",
+      },
       dropshipping: {
         title: "代发货",
         description: "B612货运代理集装箱拖运部帮助您从美国大陆任何出发地直接运输整箱（FCL）进口、出口或国内铁路货物。我们的全国网络为客户提供无缝服务、可靠性和灵活性，使集装箱运输变得简单高效。",
@@ -1002,18 +1043,49 @@ export const dictionaries = {
       message: "留言",
       submit: "提交",
       successMessage: "感谢您！您的消息已发送。",
+      requiredMarker: "*",
+      phoneCountryAriaLabel: "电话。电话。选择国家代码",
+      datePickerAriaLabel: "预计到货时间。日历对话框",
+      contactEmail: "FF@B612TimaInc.com",
+      mailto: {
+        subjectPrefix: "报价请求来自",
+        defaultCompany: "网站",
+        company: "公司",
+        name: "姓名",
+        email: "电子邮件",
+        phone: "电话",
+        shipmentEta: "预计到货时间",
+        message: "留言",
+      },
+      offices: [
+        {
+          label: "2090 S. Baker Ave, Ontario, CA 91761",
+          lat: 34.0407,
+          lng: -117.6118,
+        },
+        {
+          label: "深圳市深宝茂大厦813",
+          lat: 22.6369,
+          lng: 114.0237,
+        },
+      ],
+      directions: "路线",
     },
   },
 } as const;
 
-type DeepStringify<T> = {
-  readonly [K in keyof T]: T[K] extends string
-    ? string
-    : T[K] extends readonly (infer U)[]
-      ? U extends string
-        ? readonly string[]
-        : readonly DeepStringify<U>[]
-      : DeepStringify<T[K]>;
-};
+type DeepStringify<T> = T extends string
+  ? string
+  : T extends number
+    ? number
+    : T extends boolean
+      ? boolean
+      : T extends readonly (infer U)[]
+        ? U extends string
+          ? readonly string[]
+          : readonly DeepStringify<U>[]
+        : T extends object
+          ? { readonly [K in keyof T]: DeepStringify<T[K]> }
+          : T;
 
-export type Dictionary = DeepStringify<(typeof dictionaries)["en"]>;
+export type Dictionary = DeepStringify<(typeof dictionaries)[Locale]>;
