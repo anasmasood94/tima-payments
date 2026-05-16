@@ -34,9 +34,17 @@ export function LoginForm({ next }: { next?: string }) {
       </div>
 
       <div>
-        <label htmlFor="login-password" className="block text-base font-bold leading-tight text-ink">
-          {t.auth.password}
-        </label>
+        <div className="flex items-center justify-between">
+          <label htmlFor="login-password" className="block text-base font-bold leading-tight text-ink">
+            {t.auth.password}
+          </label>
+          <a
+            href="/forgot-password"
+            className="text-sm font-medium text-brand hover:text-brand-dark hover:underline"
+          >
+            {t.auth.forgotPassword}
+          </a>
+        </div>
         <input
           id="login-password"
           name="password"

@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
-import { clearSessionCookie, createSessionToken, setSessionCookie } from "@/lib/auth/session";
+import { clearSessionCookie, createSessionToken, getSession, setSessionCookie } from "@/lib/auth/session";
+import { sendEmailVerification } from "@/lib/email/notifications";
 import { rateLimit } from "@/lib/rate-limit";
 
 const FIFTEEN_MINUTES = 15 * 60 * 1000;
@@ -60,6 +61,12 @@ export async function registerAction(_prev: unknown, formData: FormData) {
     },
   });
 
+  try {
+    await sendEmailVerification(user.id);
+  } catch (e) {
+    console.error("[auth] Failed to send verification email:", e);
+  }
+
   const token = await createSessionToken({
     sub: user.id,
     email: user.email,
@@ -67,7 +74,37 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   });
   await clearSessionCookie();
   await setSessionCookie(token);
-  redirect("/catalog");
+  redirect("/catalog?verify=sent");
+}
+
+export async function resendVerificationAction() {
+  const session = await getSession();
+  if (!session) {
+    return { error: "Please sign in first." };
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: session.sub } });
+  if (!user) {
+    return { error: "Account not found." };
+  }
+  if (user.emailVerifiedAt) {
+    return { success: "Your email is already verified." };
+  }
+
+  const ip = await getClientIp();
+  const rl = rateLimit("resend-verify", ip, 3, ONE_HOUR);
+  if (!rl.allowed) {
+    return { error: "Too many requests. Please try again later." };
+  }
+
+  try {
+    await sendEmailVerification(user.id);
+  } catch (e) {
+    console.error("[auth] Failed to resend verification email:", e);
+    return { error: "Could not send email. Please try again later." };
+  }
+
+  return { success: "Verification email sent. Check your inbox." };
 }
 
 const loginSchema = z.object({

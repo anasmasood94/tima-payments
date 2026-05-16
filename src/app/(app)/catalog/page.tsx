@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { CATALOG_PAGE_SIZE } from "./catalog-constants";
+import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
 import { CatalogShopFlow } from "./catalog-shop-flow";
 import { CatalogHeader } from "./catalog-header";
 
@@ -9,15 +10,23 @@ export const metadata = {
   title: "Catalog",
 };
 
-type Props = { searchParams: Promise<{ page?: string }> };
+type Props = { searchParams: Promise<{ page?: string; verify?: string }> };
 
 export default async function CatalogPage({ searchParams }: Props) {
   const sp = await searchParams;
   const pageRaw = parseInt(sp.page ?? "1", 10);
   const pageRequested = Number.isFinite(pageRaw) && pageRaw > 0 ? Math.floor(pageRaw) : 1;
 
-  const [session, total, allProductsMeta] = await Promise.all([
-    getSession(),
+  const session = await getSession();
+  const user =
+    session?.role === "CUSTOMER"
+      ? await prisma.user.findUnique({
+          where: { id: session.sub },
+          select: { emailVerifiedAt: true },
+        })
+      : null;
+
+  const [total, allProductsMeta] = await Promise.all([
     prisma.product.count({ where: { active: true } }),
     prisma.product.findMany({
       where: { active: true },
@@ -49,9 +58,18 @@ export default async function CatalogPage({ searchParams }: Props) {
   const signedIn = Boolean(session);
   const isCustomer = session?.role === "CUSTOMER";
 
+  const showVerifySent = sp.verify === "sent";
+
   return (
     <div className="space-y-10">
       <CatalogHeader />
+
+      {session?.role === "CUSTOMER" ? (
+        <EmailVerificationBanner
+          emailVerified={Boolean(user?.emailVerifiedAt)}
+          showSentNotice={showVerifySent}
+        />
+      ) : null}
 
       <CatalogShopFlow
         products={products}

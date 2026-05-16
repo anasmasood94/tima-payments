@@ -4,7 +4,19 @@ import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/language-context";
 import { LoginForm } from "./login-form";
 
-export function LoginPageContent({ next, hasError }: { next?: string; hasError: boolean }) {
+export function LoginPageContent({
+  next,
+  hasError,
+  passwordReset,
+  emailVerified,
+  verifyInvalid,
+}: {
+  next?: string;
+  hasError: boolean;
+  passwordReset?: boolean;
+  emailVerified?: boolean;
+  verifyInvalid?: boolean;
+}) {
   const { t } = useTranslation();
 
   return (
@@ -19,6 +31,21 @@ export function LoginPageContent({ next, hasError }: { next?: string; hasError: 
           {hasError ? (
             <p className="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800">
               {t.auth.sessionExpired}
+            </p>
+          ) : null}
+          {passwordReset ? (
+            <p className="mb-6 rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+              {t.auth.passwordResetSuccess}
+            </p>
+          ) : null}
+          {emailVerified ? (
+            <p className="mb-6 rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+              {t.auth.emailVerifiedSuccess}
+            </p>
+          ) : null}
+          {verifyInvalid ? (
+            <p className="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800">
+              {t.auth.verifyLinkInvalid}
             </p>
           ) : null}
           <LoginForm next={next} />

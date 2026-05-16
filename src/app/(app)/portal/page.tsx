@@ -3,6 +3,7 @@ import { InvoiceStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { formatUsd } from "@/lib/format";
+import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
 import { PortalHeading } from "./portal-heading";
 import { PortalOrdersList, PortalInvoicesList } from "./portal-lists";
 import { PortalStatusMessages } from "./portal-status-messages";
@@ -19,6 +20,11 @@ export default async function PortalHomePage({
     redirect("/login");
   }
   const sp = await searchParams;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.sub },
+    select: { emailVerifiedAt: true },
+  });
 
   const [rawOrders, rawInvoices] = await Promise.all([
     prisma.order.findMany({
@@ -56,6 +62,8 @@ export default async function PortalHomePage({
         <PortalHeading />
         <PortalStatusMessages created={!!sp.created} paid={!!sp.paid} />
       </div>
+
+      <EmailVerificationBanner emailVerified={Boolean(user?.emailVerifiedAt)} />
 
       <PortalOrdersList orders={orders} />
       <PortalInvoicesList invoices={invoices} />

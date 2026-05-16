@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
+import { sendOrderConfirmationEmail } from "@/lib/email/notifications";
 import { getOrderCheckoutAdapter } from "@/lib/payments/order-checkout";
 
 const catalogLineSchema = z.object({
@@ -72,7 +73,7 @@ export async function createOrderFromCatalogForm(_prev: unknown, formData: FormD
 
   /** Quote path: no immediate payment. */
   if (intent === "quote") {
-    await prisma.order.create({
+    const quoteOrder = await prisma.order.create({
       data: {
         userId: session.sub,
         status: OrderStatus.QUOTE_REQUESTED,
@@ -80,6 +81,12 @@ export async function createOrderFromCatalogForm(_prev: unknown, formData: FormD
         lines: { create: orderLines },
       },
     });
+
+    try {
+      await sendOrderConfirmationEmail(quoteOrder.id);
+    } catch (e) {
+      console.error("[orders] Failed to send quote confirmation email:", e);
+    }
 
     revalidatePath("/portal");
     revalidatePath("/admin/orders");
@@ -164,6 +171,12 @@ export async function createOrderFromCatalogForm(_prev: unknown, formData: FormD
       metadata: checkout.metadata as object | undefined,
     },
   });
+
+  try {
+    await sendOrderConfirmationEmail(order.id);
+  } catch (e) {
+    console.error("[orders] Failed to send order confirmation email:", e);
+  }
 
   revalidatePath("/portal");
   revalidatePath("/admin/orders");
