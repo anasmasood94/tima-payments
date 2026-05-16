@@ -1,8 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useTranslation } from "@/lib/i18n/language-context";
+import {
+  ContactCalendarIcon,
+  ContactPhoneChevronIcon,
+  ContactPhoneGlobeIcon,
+} from "./contact-form-icons";
+
+const contactLabelClass =
+  "block text-[16px] font-normal leading-[1.5em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]";
+const contactInputClass =
+  "w-full min-w-0 bg-transparent py-3 text-[16px] font-normal leading-[1.5em] text-black outline-none [font-family:'Helvetica_W01',Arial,sans-serif]";
 
 export function ContactContent() {
   const { t } = useTranslation();
@@ -12,161 +22,162 @@ export function ContactContent() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const subject = `Quote Request from ${fd.get("companyName") || "Website"}`;
+    const m = c.mailto;
+    const company = String(fd.get("companyName") || m.defaultCompany);
+    const subject = `${m.subjectPrefix} ${company}`;
     const body = [
-      `Company: ${fd.get("companyName")}`,
-      `Name: ${fd.get("firstName")} ${fd.get("lastName")}`,
-      `Email: ${fd.get("email")}`,
-      `Phone: ${fd.get("phone")}`,
-      `Shipment ETA: ${fd.get("shipmentEta")}`,
-      `Message: ${fd.get("message")}`,
+      `${m.company}: ${fd.get("companyName")}`,
+      `${m.name}: ${fd.get("firstName")} ${fd.get("lastName")}`,
+      `${m.email}: ${fd.get("email")}`,
+      `${m.phone}: ${fd.get("phone")}`,
+      `${m.shipmentEta}: ${fd.get("shipmentEta")}`,
+      `${m.message}: ${fd.get("message")}`,
     ].join("\n");
-    window.location.href = `mailto:FF@B612TimaInc.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${c.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSubmitted(true);
   }
 
   return (
     <>
-      {/* ── Hero Banner ── */}
-      <section className="relative h-[45vh] min-h-[300px] overflow-hidden">
+      {/* ── Hero — live: comp-marnx8o4 (980×600) / comp-marnx8o62 ── */}
+      <section className="relative min-h-[600px] overflow-hidden bg-black">
         <Image
-          src="/hero-port.jpg"
+          src="/contact-hero-live.jpg"
           alt="Contact us"
           fill
           priority
+          quality={100}
           className="object-cover"
+          sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex h-full items-center justify-center">
-          <h1 className="text-4xl font-bold text-white sm:text-5xl">
-            {c.heroTitle}
-          </h1>
-        </div>
+        <h1 className="absolute left-1/2 top-[272px] w-[450px] max-w-[calc(100vw-40px)] -translate-x-1/2 text-center text-[56px] font-bold leading-normal tracking-normal text-white [font-family:'Helvetica_W01',Arial,sans-serif]">
+          {c.heroTitle}
+        </h1>
       </section>
 
-      {/* ── Content: Info + Form ── */}
-      <section className="px-10 py-16 lg:px-20">
-        <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-2">
-          {/* Left — Company info + price quote guide */}
-          <div>
-            <p className="text-lg font-medium text-neutral-500">{c.brandLabel}</p>
-            <h2 className="mt-2 text-2xl font-bold text-neutral-800 sm:text-3xl">
+      {/* ── Info + Form — live: comp-marwskd7 / marwswkp 980×490+490 ── */}
+      <section className="bg-white">
+        {/* Live: marwswkp 980px strip = 490px + 490px columns, 480px content blocks */}
+        <div className="b612-services-strip mx-auto mb-[22px] mt-[50px]">
+          <div className="mx-auto grid w-full max-w-[980px] max-lg:grid-cols-1 lg:grid-cols-[490px_490px]">
+          <div className="w-full lg:w-[490px]">
+            <div className="mx-auto w-full max-w-[480px]">
+            <p className="mb-5 text-[20px] font-normal leading-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+              {c.brandLabel}
+            </p>
+            <h2 className="mb-6 text-[38px] font-bold leading-[1.2em] tracking-normal text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
               {c.partnerTitle}
             </h2>
-            <h3 className="mt-6 text-base font-bold text-brand">{c.guideTitle}</h3>
+            <h3 className="mb-5 text-[20px] font-bold leading-normal text-[#14AA3C] [font-family:'Helvetica_W01',Arial,sans-serif]">
+              {c.guideTitle}
+            </h3>
 
-            <div className="mt-6">
-              <p className="text-sm font-bold text-neutral-800">{c.drayageTitle}</p>
-              <ul className="mt-2 space-y-1 text-[13px] leading-[1.7] text-neutral-600">
-                {c.drayageFields.map((f, i) => (
-                  <li key={i}>{f}</li>
-                ))}
-              </ul>
+            <div className="mb-5 text-[16px] font-normal leading-[1.5em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+              <p className="font-bold">{c.drayageTitle}</p>
+              {c.drayageFields.map((field, i) => (
+                <p key={i}>{field}</p>
+              ))}
             </div>
 
-            <div className="mt-8">
-              <p className="text-sm font-bold text-neutral-800">{c.otrTitle}</p>
-              <ul className="mt-2 space-y-1 text-[13px] leading-[1.7] text-neutral-600">
-                {c.otrFields.map((f, i) => (
-                  <li key={i}>{f}</li>
-                ))}
-              </ul>
+            <div className="mb-14 text-[16px] font-normal leading-[1.5em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+              <p className="font-bold">{c.otrTitle}</p>
+              {c.otrFields.map((field, i) => (
+                <p key={i}>{field}</p>
+              ))}
+            </div>
             </div>
           </div>
 
-          {/* Right — Contact form */}
-          <div>
-            <h2 className="text-xl font-bold text-neutral-800 sm:text-2xl">
+          <div className="w-full lg:w-[490px]">
+            <div className="mx-auto w-full max-w-[480px] lg:ml-[10px] lg:mr-auto">
+            <h2 className="mb-6 text-[24px] font-bold leading-[1.2em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
               {c.formTitle}
             </h2>
 
             {submitted ? (
-              <p className="mt-8 text-brand font-medium">{c.successMessage}</p>
+              <p className="mt-5 text-[16px] font-normal leading-[1.5em] text-black [font-family:'Helvetica_W01',Arial,sans-serif]">
+                {c.successMessage}
+              </p>
             ) : (
-              <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-                <div>
-                  <label className="block text-sm text-neutral-600">{c.companyName}</label>
-                  <input
-                    name="companyName"
-                    type="text"
-                    className="mt-1 w-full border-b border-neutral-300 bg-transparent py-2 text-sm text-neutral-800 outline-none focus:border-brand"
-                  />
-                </div>
+              <form onSubmit={handleSubmit}>
+                <ContactFormField label={c.companyName}>
+                  <input name="companyName" type="text" className={contactInputClass} />
+                </ContactFormField>
 
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <label className="block text-sm text-neutral-600">
-                      {c.firstName} <span className="text-red-500">*</span>
-                    </label>
+                <div className="mb-5 grid grid-cols-2 gap-5">
+                  <ContactFormField label={c.firstName} requiredMarker={c.requiredMarker}>
                     <input
                       name="firstName"
                       type="text"
                       required
-                      className="mt-1 w-full border-b border-neutral-300 bg-transparent py-2 text-sm text-neutral-800 outline-none focus:border-brand"
+                      className={contactInputClass}
                     />
+                  </ContactFormField>
+                  <ContactFormField label={c.lastName}>
+                    <input name="lastName" type="text" className={contactInputClass} />
+                  </ContactFormField>
+                </div>
+
+                <ContactFormField label={c.email} requiredMarker={c.requiredMarker}>
+                  <input name="email" type="email" required className={contactInputClass} />
+                </ContactFormField>
+
+                <ContactFormField label={c.phone} composite>
+                  <div className="flex items-stretch border-b-2 border-black">
+                    <button
+                      type="button"
+                      className="flex shrink-0 items-center gap-0.5 px-1 py-2 text-[#595959]"
+                      aria-label={c.phoneCountryAriaLabel}
+                    >
+                      <ContactPhoneGlobeIcon />
+                      <ContactPhoneChevronIcon />
+                    </button>
+                    <input name="phone" type="tel" className={contactInputClass} />
                   </div>
-                  <div>
-                    <label className="block text-sm text-neutral-600">{c.lastName}</label>
+                </ContactFormField>
+
+                <ContactFormField label={c.shipmentEta} composite>
+                  <div className="flex items-stretch border-b-2 border-black">
+                    <button
+                      type="button"
+                      className="shrink-0 px-1 py-2 text-[#595959]"
+                      aria-label={c.datePickerAriaLabel}
+                      onClick={(e) => {
+                        const input = e.currentTarget.parentElement?.querySelector(
+                          'input[name="shipmentEta"]'
+                        ) as HTMLInputElement | null;
+                        input?.showPicker?.();
+                        input?.focus();
+                      }}
+                    >
+                      <ContactCalendarIcon />
+                    </button>
                     <input
-                      name="lastName"
-                      type="text"
-                      className="mt-1 w-full border-b border-neutral-300 bg-transparent py-2 text-sm text-neutral-800 outline-none focus:border-brand"
+                      name="shipmentEta"
+                      type="date"
+                      className={`${contactInputClass} [color-scheme:light] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:opacity-0`}
                     />
                   </div>
-                </div>
+                </ContactFormField>
 
-                <div>
-                  <label className="block text-sm text-neutral-600">
-                    {c.email} <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    className="mt-1 w-full border-b border-neutral-300 bg-transparent py-2 text-sm text-neutral-800 outline-none focus:border-brand"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm text-neutral-600">{c.phone}</label>
-                  <input
-                    name="phone"
-                    type="tel"
-                    className="mt-1 w-full border-b border-neutral-300 bg-transparent py-2 text-sm text-neutral-800 outline-none focus:border-brand"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm text-neutral-600">{c.shipmentEta}</label>
-                  <input
-                    name="shipmentEta"
-                    type="date"
-                    className="mt-1 w-full border-b border-neutral-300 bg-transparent py-2 text-sm text-neutral-800 outline-none focus:border-brand"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm text-neutral-600">{c.message}</label>
-                  <input
-                    name="message"
-                    type="text"
-                    className="mt-1 w-full border-b border-neutral-300 bg-transparent py-2 text-sm text-neutral-800 outline-none focus:border-brand"
-                  />
-                </div>
+                <ContactFormField label={c.message}>
+                  <input name="message" type="text" className={contactInputClass} />
+                </ContactFormField>
 
                 <button
                   type="submit"
-                  className="rounded-full bg-brand px-10 py-3 text-sm font-bold tracking-wide text-white transition hover:bg-brand-dark"
+                  className="mt-5 rounded-[10px] bg-[#14AA3C] px-6 py-[11px] text-[16px] font-normal leading-[1.4em] text-white transition hover:bg-[#14AA3C] [font-family:'Helvetica_W01',Arial,sans-serif]"
                 >
                   {c.submit}
                 </button>
               </form>
             )}
+            </div>
+          </div>
           </div>
         </div>
       </section>
 
-      {/* ── Google Maps with two pins ── */}
       <section className="w-full">
         <OfficeMap />
       </section>
@@ -174,31 +185,54 @@ export function ContactContent() {
   );
 }
 
-const OFFICES = [
-  { lat: 34.0407, lng: -117.6118, label: "2090 S. Baker Ave, Ontario, CA 91761" },
-  { lat: 22.6369, lng: 114.0237, label: "深圳市深宝茂大厦813" },
-];
+function ContactFormField({
+  label,
+  requiredMarker,
+  children,
+  composite = false,
+}: {
+  label: string;
+  requiredMarker?: string;
+  children: ReactNode;
+  composite?: boolean;
+}) {
+  return (
+    <div className="mb-5">
+      <label className={contactLabelClass}>
+        {label}
+        {requiredMarker ? (
+          <span aria-hidden="true" className="ml-0.5">
+            {requiredMarker}
+          </span>
+        ) : null}
+      </label>
+      {composite ? children : <div className="border-b-2 border-black">{children}</div>}
+    </div>
+  );
+}
 
 function OfficeMap() {
+  const { t } = useTranslation();
+  const c = t.contactPage;
   const mapRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if ((window as any).google?.maps) {
+    if ((window as { google?: { maps?: unknown } }).google?.maps) {
       initMap();
       return;
     }
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?callback=__initContactMap`;
+    script.src = "https://maps.googleapis.com/maps/api/js?callback=__initContactMap";
     script.async = true;
     script.defer = true;
-    (window as any).__initContactMap = () => {
+    (window as { __initContactMap?: () => void }).__initContactMap = () => {
       setLoaded(true);
       initMap();
     };
     document.head.appendChild(script);
     return () => {
-      delete (window as any).__initContactMap;
+      delete (window as { __initContactMap?: () => void }).__initContactMap;
     };
   }, []);
 
@@ -207,25 +241,34 @@ function OfficeMap() {
   }, [loaded]);
 
   function initMap() {
-    if (!mapRef.current || !(window as any).google?.maps) return;
-    const google = (window as any).google;
-    const map = new google.maps.Map(mapRef.current, {
+    type GMaps = {
+      Map: new (el: HTMLElement, opts: object) => object;
+      Marker: new (opts: object) => { addListener: (event: string, fn: () => void) => void };
+      InfoWindow: new (opts: { content?: string }) => { open: (map: object, marker: object) => void };
+    };
+    const g = (window as { google?: { maps: GMaps } }).google;
+    if (!mapRef.current || !g?.maps) return;
+
+    const map = new g.maps.Map(mapRef.current, {
       center: { lat: 30, lng: -30 },
       zoom: 2,
       mapTypeControl: true,
       streetViewControl: true,
       zoomControl: true,
     });
-    OFFICES.forEach((office) => {
-      const marker = new google.maps.Marker({
+
+    c.offices.forEach((office) => {
+      const marker = new g.maps.Marker({
         position: { lat: office.lat, lng: office.lng },
         map,
         title: office.label,
       });
-      const infoWindow = new google.maps.InfoWindow({ content: `<div style="font-size:13px;max-width:200px"><strong>${office.label}</strong><br/><a href="https://maps.google.com/?q=${encodeURIComponent(office.label)}" target="_blank" style="color:#1a73e8">Directions</a></div>` });
+      const infoWindow = new g.maps.InfoWindow({
+        content: `<div style="padding:8px;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.4"><strong>${office.label}</strong><br/><a href="https://www.google.com/maps/dir/?api=1&destination=${office.lat},${office.lng}" target="_blank" rel="noopener noreferrer">${c.directions}</a></div>`,
+      });
       marker.addListener("click", () => infoWindow.open(map, marker));
     });
   }
 
-  return <div ref={mapRef} className="h-[400px] w-full bg-neutral-100" />;
+  return <div ref={mapRef} className="h-[350px] w-full bg-neutral-100" />;
 }
