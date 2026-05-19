@@ -42,6 +42,8 @@ Connect the Git repo, set environment variables, use **Vercel Postgres** or exte
 | `DATABASE_URL` | PostgreSQL connection |
 | `SESSION_SECRET` | Long random string (≥16 chars) for session JWT |
 | `NEXT_PUBLIC_APP_URL` | Public site URL for payment return/cancel links |
+| `EMAIL_FROM` + `AWS_REGION` | **EC2 with IAM role:** SES API (no SMTP passwords). `EMAIL_FROM` must be a verified SES identity in that region. |
+| `SMTP_*` + `EMAIL_FROM` | Alternative: send via SMTP instead of the SES API |
 | `ORDER_CHECKOUT_GATEWAY` | `AIRWALLEX`, `ADYEN`, `WORLDPAY`, `CYBERSOURCE`, or `NUVEI` (catalog + invoice checkout; default Airwallex) |
 | PSP-specific keys | As documented in `.env.example` |
 
